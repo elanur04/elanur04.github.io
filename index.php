@@ -1,0 +1,256 @@
+<?php 
+  session_start();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kişisel Portföy | Elanur Beycan</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="earth-11008_1280.jpg" type="image/x-icon">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<!-- header a css den erişmek için class olarak yazdık -->
+<header class="header">
+    <a href="#home" class="logo">Elanur <span>Beycan</span></a>
+    <nav class="navbar">
+        <a href="#home" class="active">Ana Sayfa</a>
+        <a href="#education">Eğitim</a>
+        <a href="#services">Projeler</a>
+        <a href="#testimonials">Referanslar</a>
+        <a href="#contact">İletişim</a>
+          </nav>
+</header>
+
+<section class="home" id="home">
+    <div class="home-content">
+        <h3>Merhaba, ben <span>Ela</span></h3>
+        <h3>Ben <span class="text-animation"></span></h3>
+        <p>Yazılım sektöründe tutunmaya çalışan biriyim diyebilirim.Okyanustaki küçük bir balık gibi sektöre girdim ama tabii her yazılıma başlayan biri gibi nerden başlayacağını bilmeyenlerdendim. Bir yerden deneyimlemeye başladım ,bu sefer de aklımda bir soru belirdi.Hangi alanda uzmanlaşmalıyım? Bitmek bilmeyen o sorular hep devam edicekti farkındaydım.Sizde benim gibi bu okyanusta deniz kızı olmaya çalışan küçük bir balıksanız beni anlıyorsunuzdur.Benim yazılım yolculuğumu bu siteden takip edebilirsiniz.Ayrıca benim gibi bu yollardan geçenler önerilerini veya sormak istediklerini bana sorabilir.</p></p>
+
+        <div class="social-icons">
+            <a href="https://www.linkedin.com/in/elanurbeycan" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="https://github.com/elanur04" target="_blank"><i class="fa-brands fa-github"></i></a>
+        </div>
+
+        <div class="btn-group">
+            <a href="https://drive.google.com/file/d/185WWFumE6NExLl18iHCO4_n3V0dxsEq0/view?usp=sharing" class="btn">CV</a>
+            <a href="index.php#contact" class="btn">Bana Ulaş</a>
+        </div>
+    </div>
+
+    <div class="home-img">
+        <img src="earth-11008_1280.jpg" alt="Elanur Beycan">
+    </div>
+</section>
+
+<!--EDUCATİON START-->
+
+<section class="education" id="education">
+    <h2 class="heading">Eğitim</h2>
+    <div class="timeline-items">
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-date">2022</div>
+            <div class="timeline-content">
+                <h3>Lise</h3>
+                <p>Avcılar Süleyman Nazif Anadolu Lisesi mezunuyum.(2018-2022)</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-date">2025</div>
+            <div class="timeline-content">
+                <h3>Siber Vatan</h3>
+                <p>Batı Karadeniz Kalkınma Ajansı tarafından gerçekleşen siber vatan programında Web Güvenliği, Sızma Testi, Zararlı Yazılım Analizi ve Tersine Mühendislik eğitimlerini almış bulunmaktayım.Siber güvenlik sektörü hakkında fikir sahibi olmuş oldum.</p>
+            </div>
+        </div>
+    <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-date">2025</div>
+            <div class="timeline-content">
+                <h3>Acun Medya</h3>
+                <p>Acun medya akademi tarafından gerçekleşen makine öğrenmesi eğitimini aldım ve veri bilimine çıtırdan bir aşinalık kazandım.</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-date">2027</div>
+            <div class="timeline-content">
+                <h3>Üniversite</h3>
+                <p>Bartın Üniversitesi Bilgisayar Mühendisliği 3.sınıf öğrencisiyim.(2023-2027)</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+<!--EDUCATİON END-->
+
+<!--SERVICES START-->
+
+<section id="services" class="services">
+    <h2 class="heading">Projeler</h2>  <!-- oluşturduğumuz headingi çağırıyoruz -->
+    <div class="services-container"></div>
+    <div class="service-box">
+    <div class="service-info">
+    <h4>Student Depression Datasets İncelenmesi</h4>
+  <br>
+    <p>Öğrenci depresyonu verileri üzerinden makine öğrenmesi algoritmaları da kullanılarak veriler incelendi ve model eğitildi.Model yeni veriler üzerinde %80 nin üstünde tahmin edebilme başarısı gösterdi.Kaynak kodlara github hesabımdan bakabilirsiniz. </p>
+          </div>
+        </div>
+    <div class="service-box">
+    <div class="service-info">
+    <h4>Kuru Temizleme Veri Tabanı Sistemi</h4>
+    <br>
+    <p>Bir kuru temizlemeciye gelen siparişlerin durumunu kontrol ettiği, sipariş durumlarının takibini sağladığı bir nevi yönetim paneli.Php,html,css,mysql kullanarak gerçekleştirmiş bulunmaktayım.</p>
+          </div>
+        </div>
+    <div class="service-box">
+    <div class="service-info">
+    <h4>Mizah Verse</h4>
+    <br>
+    <p>Kullanıcıların komik içerikler paylaşabildiği,takip ettikleri kullanıcılara mesaj gönderebildikleri,içerik arama ve filtreleme özellikleri bulunan bir sosyal medya platformudur.</p>
+          </div>
+        </div>
+        </div>
+        </section>
+<!--SERVİCES END-->
+<!--TESTİMONIALS START-->
+<section class="testimonials" id="testimonials">
+  <div class="testimonials-box">
+    <h2 class="heading">Referanslar</h2>
+
+    <!-- Kutuları saran container -->
+    <div class="testimonials-wrapper">
+
+      <div class="testimonial-item">
+        <img src="https://img.icons8.com/?size=100&id=ywULFSPkh4kI&format=png&color=FFFFFF" alt="">
+        <h2>Yashar Anvarov</h2>
+        <div class="rating">
+          <i class="bx bxs-star"></i>
+          <i class="bx bxs-star"></i>
+          <i class="bx bxs-star"></i>
+          <i class="bx bxs-star"></i>
+          <i class="bx bxs-star"></i>
+        </div>
+        <p>Bilgisayar Mühendisi / Beranet Yazılım Müdürü</p>
+      </div>
+
+      <div class="testimonial-item">
+        <img src="https://img.icons8.com/?size=100&id=ywULFSPkh4kI&format=png&color=FFFFFF" alt="">
+        <h2>Harun Akkuş</h2>
+        <div class="rating">
+          <i class="bx bxs-star"></i>
+          <i class="bx bxs-star"></i>
+          <i class="bx bxs-star"></i>
+          <i class="bx bxs-star"></i>
+          <i class="bx bxs-star"></i>
+        </div>
+        <p>Yüksek Bilgisayar Mühendisi / Beranet Genel Müdürü</p>
+      </div>
+
+      <div class="testimonial-item">
+        <img src="https://img.icons8.com/?size=100&id=ywULFSPkh4kI&format=png&color=FFFFFF" alt="">
+        <h2>Recep Ö.</h2>
+        <div class="rating">
+          <i class="bx bxs-star"></i>
+          <i class="bx bxs-star"></i>
+          <i class="bx bxs-star"></i>
+          <i class="bx bxs-star"></i>
+          <i class="bx bxs-star"></i>
+        </div>
+        <p>Back-End Developer / Beranet Yazılım Uzmanı</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!--TESTİMONIALS END-->
+
+<!--CONTACT START-->
+
+<section class="contact" id="contact">
+<h2 class="heading">Bana   <span>Ulaş</span></h2>
+
+    <?php if(isset($_SESSION['message'])): ?>
+        <div id="form" class="alert alert-success form-alert">
+            <?php echo $_SESSION['message']; ?>
+        </div>
+        <?php unset($_SESSION['message']); ?>
+    <?php endif; ?>
+
+    <form action="send_email.php" method="POST">
+
+    <div class="input-group">
+        <div class="input-box">
+        <input type="text" name="name" placeholder="Adınız" required />
+        <input type="email" name="email" placeholder="E-posta"/>
+       </div>
+       <div class="input-box">
+        <input type="number"name="phone" placeholder="Telefon" required />
+        <input type="text" name="subject" placeholder="Konu"/>
+    </div >  
+</div>
+
+<div class="input-group-2">
+    <textarea name="message"placeholder="Mesajınız" id="" cols="30" rows="10"></textarea>
+    <input type="submit" value="Mesaj Gönder" class="btn"/>
+</div>
+</form>
+</section>
+
+<!-- Contact END -->
+
+<!--Footer start
+
+<footer class="footer">
+<div class="social">
+<a href="https://www.linkedin.com/in/elanurbeycan" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="https://github.com/elanur04" target="_blank"><i class="fa-brands fa-github"></i></a>
+</div>
+<ul class="list">
+<li>
+  <a href="#home">Ana Sayfa</a>
+</li>
+<li>
+  <a href="#education">Eğitim</a>
+    </li>
+    <li>
+      <a href="#services">Hizmetler</a>
+    </li>
+    <li>
+      <a href="#testimonials">Referanslar</a>
+    </li>
+</ul>
+    </footer>
+-->
+
+
+
+
+
+
+
+
+
+<script src="script.js">
+
+let menu = document.querySelector('#menu-icon');
+let navbar = document.querySelector('.navbar');
+
+menu.onclick = () => {
+    navbar.classList.toggle('active');
+}
+
+
+
+</script>
+
+</body>
+</html>
