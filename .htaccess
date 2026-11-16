@@ -1,0 +1,4 @@
+# .env ve composer dosyalarının tarayıcıdan okunmasını engelle
+<FilesMatch "^(\.env.*|composer\.(json|lock))$">
+    Require all denied
+</FilesMatch>
