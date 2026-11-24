@@ -282,10 +282,10 @@
     if (!canvas || !canvas.getContext) return;
     const ctx = canvas.getContext('2d');
     const COL = {
-        ground: '#0b1f4b', road: '#12285b', lane: 'rgba(120,150,220,.18)',
-        roof: '#17326f', roofEdge: '#26468a', shadow: '#071431',
-        park: '#103462', tree: '#1c4c80',
-        mag: '#e0115f', label: '#ffffff'
+        ground: '#0f3b2d', road: '#164a39', lane: 'rgba(150,220,190,.18)',
+        roof: '#1a5543', roofEdge: '#2c6d56', shadow: '#0a2a20',
+        park: '#185e40', tree: '#237a52',
+        mag: '#22c27a', dark: '#062419'
     };
     const ANGLE = -0.21;
     const cosA = Math.cos(ANGLE), sinA = Math.sin(ANGLE);
@@ -353,7 +353,7 @@
         const w = ctx.measureText(text).width + 10;
         ctx.fillStyle = strong ? '#ffffff' : COL.mag;
         ctx.fillRect(x, y - 16, w, 16);
-        ctx.fillStyle = strong ? COL.mag : '#ffffff';
+        ctx.fillStyle = COL.dark;
         ctx.fillText(text, x + 5, y - 4.5);
     };
 
@@ -395,9 +395,9 @@
             } else b.hov *= 0.85;
             const vis = Math.max(a, b.hov);
             if (vis > 0.01) {
-                ctx.fillStyle = `rgba(224,17,95,${(0.34 * vis).toFixed(3)})`;
+                ctx.fillStyle = `rgba(34,194,122,${(0.34 * vis).toFixed(3)})`;
                 ctx.fillRect(b.x, b.y, b.w, b.h);
-                ctx.strokeStyle = b.hov > a ? `rgba(255,255,255,${vis.toFixed(3)})` : `rgba(224,17,95,${vis.toFixed(3)})`;
+                ctx.strokeStyle = b.hov > a ? `rgba(255,255,255,${vis.toFixed(3)})` : `rgba(34,194,122,${vis.toFixed(3)})`;
                 ctx.lineWidth = 1.8; ctx.strokeRect(b.x, b.y, b.w, b.h);
             }
         });
@@ -406,7 +406,7 @@
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         if (beamX !== null && beamX > -50 && beamX < W + 50) {
             const g = ctx.createLinearGradient(beamX - 220, 0, beamX, 0);
-            g.addColorStop(0, 'rgba(224,17,95,0)'); g.addColorStop(1, 'rgba(224,17,95,.22)');
+            g.addColorStop(0, 'rgba(34,194,122,0)'); g.addColorStop(1, 'rgba(34,194,122,.22)');
             ctx.fillStyle = g; ctx.fillRect(beamX - 220, 0, 220, H);
             ctx.fillStyle = COL.mag; ctx.fillRect(beamX - 1, 0, 2, H);
         }
