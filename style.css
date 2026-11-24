@@ -588,12 +588,6 @@ color: black;
     color:gold;
     font-size: 2rem;
 }
-.testimonial-item:nth-child(2){
-    border: 3px solid var(--main-color);
-    box-shadow: 0 0 50px var(--main-color);
-    transform: scale(1.1);
-    animation: ligthing 1s infinite alternate;
-}
 
     /*TESTİMONIALS END*/    
 
