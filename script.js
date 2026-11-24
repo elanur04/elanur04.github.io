@@ -53,7 +53,7 @@
     });
 
     /* ---------- Kaydırınca beliren öğeler ---------- */
-    const revealSel = '.hero-lead, .facts > div, .hero-actions, .step, .tool-row, .ref, .refs-note, .contact-lead, .mail-row, .contact-links';
+    const revealSel = '.hero-lead, .facts > div, .hero-actions, .tool-row, .ref, .refs-note, .contact-lead, .mail-row, .contact-links';
     $$(revealSel).forEach(el => {
         el.classList.add('reveal');
         const sib = [...el.parentElement.children].filter(c => c.matches(revealSel));
@@ -159,24 +159,6 @@
     $('.case-close').addEventListener('click', () => dialog.close());
     dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
     dialog.addEventListener('close', () => { root.style.overflow = ''; });
-
-    /* ---------- Yol: yapışkan yıl ---------- */
-    const yearEl = $('#year-now');
-    const steps = $$('.step');
-    if (steps[0]) steps[0].classList.add('is-current');
-    const setYear = (y) => {
-        if (yearEl.textContent === y) return;
-        yearEl.textContent = y;
-        if (!reduce) { yearEl.classList.remove('flip'); void yearEl.offsetWidth; yearEl.classList.add('flip'); }
-    };
-    const stepIO = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-            if (!e.isIntersecting) return;
-            steps.forEach(s => s.classList.toggle('is-current', s === e.target));
-            setYear(e.target.dataset.year);
-        });
-    }, { rootMargin: '-40% 0px -55% 0px' });
-    steps.forEach(s => stepIO.observe(s));
 
     /* ---------- Araç kutusu: araç → proje ---------- */
     const readout = $('#tool-readout');

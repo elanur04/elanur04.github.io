@@ -320,25 +320,16 @@ h2 { font-size: var(--s-xl); font-weight: 900; }
 
 /* ---------- Journey ---------- */
 .journey { background: var(--mist); padding-block: clamp(5rem, 9vw, 8rem); margin-top: clamp(3rem, 6vw, 5rem); }
-.journey-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 2rem 4rem; margin-top: 3rem; }
-.year-rail { position: relative; }
-.year {
-    position: sticky; top: 22svh;
-    font: 900 clamp(5rem, 1rem + 9vw, 11rem)/.85 var(--display);
-    letter-spacing: -0.06em; color: var(--ox);
-    perspective: 800px; overflow: hidden; padding-bottom: .05em;
-}
-.year span { display: inline-block; transform-origin: 50% 100%; }
-.year span.flip { animation: flip .6s var(--ease); }
-@keyframes flip { from { transform: rotateX(-90deg) translateY(30%); opacity: 0; } }
+.journey-grid { margin-top: 3rem; }
 .steps { display: grid; }
-.step { padding: 2.2rem 0; border-top: 1px solid var(--line); }
-.step > * { opacity: .38; transition: opacity .5s; }
+.step {
+    display: grid; grid-template-columns: minmax(0, 14rem) minmax(0, 1fr); gap: .4rem 3rem;
+    padding: 2rem 0; border-top: 1px solid var(--line);
+}
 .step:last-child { border-bottom: 1px solid var(--line); }
-.step.is-current > * { opacity: 1; }
-.step time { font-size: var(--s-sm); font-weight: 600; color: var(--mag-text); }
-.step h3 { font-size: var(--s-lg); margin: .35rem 0 .5rem; }
-.step p { color: var(--muted); max-width: 60ch; }
+.step time { grid-row: span 2; font-size: var(--s-sm); font-weight: 600; color: var(--mag-text); padding-top: .3rem; }
+.step h3 { font-size: var(--s-lg); }
+.step p { color: var(--muted); max-width: 64ch; }
 
 /* ---------- Toolbox ---------- */
 .toolbox { padding-block: clamp(5rem, 9vw, 8rem); }
@@ -466,9 +457,8 @@ h2 { font-size: var(--s-xl); font-weight: 900; }
     .panel { width: 100%; height: auto; grid-template-columns: 1fr; transform: none !important; opacity: 1 !important; }
     .panel-art { aspect-ratio: 4 / 3; }
 
-    .journey-grid { grid-template-columns: 1fr; }
-    .year-rail { position: sticky; top: 4.2rem; z-index: 2; background: var(--mist); margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); }
-    .year { position: static; font-size: clamp(3.5rem, 18vw, 6rem); padding-block: .4rem; }
+    .step { grid-template-columns: 1fr; }
+    .step time { grid-row: auto; padding-top: 0; }
     .case-grid { grid-template-columns: 1fr; }
     .refs-grid { grid-template-columns: 1fr; }
     .refs-note { grid-column: auto; }
@@ -508,5 +498,4 @@ h2 { font-size: var(--s-xl); font-weight: 900; }
     .hero-stage, .hero-inner, .panel, [data-tilt], [data-magnet], .js .reveal, .js [data-split] .w > span, .js .hero-name .row > span { transform: none !important; opacity: 1 !important; }
     .hero-stage { border-radius: 0 !important; }
     .js .hero-kicker, .js .hero-caption { opacity: 1; transform: none; }
-    .step > * { opacity: 1 !important; }
 }
