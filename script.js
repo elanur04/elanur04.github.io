@@ -162,14 +162,14 @@
 
     /* ---------- Araç kutusu: araç → proje ---------- */
     const readout = $('#tool-readout');
-    const tools = $$('.tool-row li');
+    const tools = $$('.tool-row li[data-used]');
     const showTool = (li) => {
         tools.forEach(t => t.classList.toggle('is-picked', t === li));
         readout.textContent = '';
         const b = document.createElement('strong');
         b.textContent = li.textContent;
         readout.appendChild(b);
-        readout.appendChild(document.createTextNode(li.dataset.used ? ' kullanıldığı proje: ' + li.dataset.used : ': bu sitedeki projelerde yer almıyor.'));
+        readout.appendChild(document.createTextNode(' kullanıldığı proje: ' + li.dataset.used));
     };
     tools.forEach(li => {
         li.addEventListener('pointerenter', () => showTool(li));
