@@ -220,23 +220,23 @@ color: black;
  @keyframes words{
     0%, 
     20%{
-        content: "Full Stack Developer'ım";
+        content: "Machine Learning Developer'ım";
     }
     21%, 
     40%{
-        content: "Data Engineer 'ım";
+        content: "Backend Developer'ım";
     }
      41%, 
     60%{
-        content: "Machine Learning Engineer'ım";
+        content: "Full Stack Developer'ım";
     }
      61%, 
     80%{
-        content: "Cyber Security Specialist";
+        content: "Computer Vision Geliştiricisiyim";
     }
      81%, 
      100%{
-        content: "Back-end Developer'ım";
+        content: "Cloud & DevOps Meraklısıyım";
     }
      }
 @keyframes typing{
@@ -423,18 +423,17 @@ color: black;
     display: grid;
     grid-template-columns: 1fr;
     gap: 2.5rem;
-    max-width: 500px;
+    max-width: 1000px;
     margin: 0 auto;
 }
 .service-box{
     background-color: var(--main-color);
-    margin-bottom: 20px; /*kutular arasına boşluk koyduk*/
-    height: 200px;
+    min-height: 200px;
+    height: auto;
     border-radius: 3rem;
     border: 5px solid transparent;
-    cursor: pointer;
     transition: 0.4s ease-in-out;
-    padding: 1.5rem;
+    padding: 2.5rem 3rem;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -445,32 +444,104 @@ color: black;
     background-color: #ffffff;
     color: #000000;
     border: 5px solid var(--main-color);
-    transform: scale(1.03);
+    transform: scale(1.02);
 }
 .service-box .service-info{
     display: flex;
-    flex-direction:column;
+    flex-direction: column;
     text-align: left;
-    max-height: 120px;
-    justify-content: left;
-    align-items: baseline;
-    padding: 1rem;
+    gap: 1rem;
+    padding: 0.5rem;
+}
+.project-badge{
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1a1919;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+    opacity: 0.85;
 }
 .service-info h4{
     font-size: 2.2rem;
     font-weight: 800;
-    line-height: 1.5;
+    line-height: 1.4;
  }
  .service-info p{
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.6;
+}
+.project-footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 0.8rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+}
+.project-tech{
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #111;
+}
+.project-link{
+    display: inline-block;
+    padding: 0.7rem 1.8rem;
+    border-radius: 3rem;
+    background-color: #1a1919;
+    color: var(--main-color);
     font-size: 1.4rem;
     font-weight: 600;
-    max-height: 80px;
-    line-height:1.5;
-    margin: auto;
+    transition: 0.3s ease;
+}
+.project-link:hover{
+    background-color: #000;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.35);
+    transform: translateY(-2px);
 }
 
 
 /*SERVİCES END*/
+
+/*SKILLS START*/
+.skills{
+    background-color: var(--bg-color);
+    min-height: auto;
+}
+.skills-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+.skill-card{
+    background-color: var(--second-bg-color);
+    border: 3px solid var(--main-color);
+    border-radius: 2.5rem;
+    padding: 2.5rem 3rem;
+    box-shadow: 0 0 12px rgba(0, 255, 238, 0.25);
+    transition: 0.3s ease-in-out;
+}
+.skill-card:hover{
+    box-shadow: 0 0 25px var(--main-color);
+    transform: translateY(-4px);
+}
+.skill-card h3{
+    font-size: 2rem;
+    color: var(--main-color);
+    margin-bottom: 1.2rem;
+    font-weight: 700;
+}
+.skill-card p{
+    font-size: 1.5rem;
+    color: var(--text-color);
+    line-height: 1.7;
+    font-weight: 400;
+}
+/*SKILLS END*/
 
 /*TESTİMONIALS START*/
 
@@ -530,6 +601,19 @@ color: black;
 
     .contact{
         background-color: var(--bg-color);
+    }
+    .contact-subtitle{
+        text-align: center;
+        font-size: 1.7rem;
+        color: var(--text-color);
+        margin-top: -2.5rem;
+        margin-bottom: 3rem;
+    }
+    .contact-subtitle a{
+        color: var(--main-color);
+    }
+    .contact-subtitle a:hover{
+        text-decoration: underline;
     }
     .contact form{
         display: flex;
