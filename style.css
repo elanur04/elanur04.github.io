@@ -149,7 +149,10 @@ section {
     transition: background-color .2s;
 }
 .navbar .nav-cta::after { display: none; }
-.navbar .nav-cta:hover { color: #fff; background: var(--water); }
+.navbar a.nav-cta,
+.navbar a.nav-cta.is-active { color: #fff; }
+.navbar a.nav-cta:hover,
+.navbar a.nav-cta.is-active { background: var(--water); }
 
 .menu-toggle {
     display: none;
@@ -248,8 +251,8 @@ section {
 .hero-name .line { display: block; overflow: hidden; padding-bottom: .06em; }
 .hero-name .line > span { display: inline-block; }
 .hero-name .line:nth-child(2) > span {
-    color: transparent;
-    -webkit-text-stroke: 2px var(--ink);
+    font-weight: 500;
+    color: var(--ink-soft);
 }
 
 .hero-lead {
@@ -681,7 +684,6 @@ section {
 @media (max-width: 560px) {
     .skill-groups { grid-template-columns: 1fr; }
     .hero-actions .btn { flex: 1 1 100%; }
-    .hero-name .line:nth-child(2) > span { -webkit-text-stroke-width: 1.5px; }
 }
 
 /* Hareket istemeyenler için */
