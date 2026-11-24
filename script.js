@@ -1,527 +1,480 @@
 /* Elanur Beycan — portföy etkileşimleri (kütüphanesiz) */
 (() => {
     const root = document.documentElement;
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const desktopMQ = window.matchMedia('(min-width: 961px)');
     const clamp = (v, a, b) => Math.min(Math.max(v, a), b);
+    const $ = (s, el = document) => el.querySelector(s);
+    const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 
-    /* ---------- Karşılama perdesi ve giriş animasyonu ---------- */
-    const intro = document.getElementById('intro');
+    /* ---------- Karşılama perdesi ---------- */
+    const curtain = $('#curtain');
     let introResolve;
     const introDone = new Promise(r => { introResolve = r; });
+    let finished = false;
     const finishIntro = () => {
-        if (intro) intro.classList.add('is-done');
-        setTimeout(() => { root.classList.add('is-loaded'); introResolve(); }, 350);
+        if (finished) return;
+        finished = true;
+        if (curtain) curtain.classList.add('is-done');
+        setTimeout(() => { root.classList.add('is-loaded'); introResolve(); }, 300);
+        setTimeout(() => curtain && curtain.remove(), 1400);
     };
-    if (intro && !reduceMotion) {
-        const num = document.getElementById('intro-num');
+    if (curtain && !reduce) {
+        const num = $('#curtain-num');
         const t0 = performance.now();
-        const DUR = 1100;
         const tick = (now) => {
-            const k = clamp((now - t0) / DUR, 0, 1);
+            const k = clamp((now - t0) / 1150, 0, 1);
             num.textContent = Math.round((1 - Math.pow(1 - k, 3)) * 100);
             if (k < 1) requestAnimationFrame(tick); else setTimeout(finishIntro, 120);
         };
         requestAnimationFrame(tick);
-        intro.addEventListener('click', finishIntro, { once: true });
+        curtain.addEventListener('click', finishIntro);
     } else {
-        if (intro) intro.remove();
-        requestAnimationFrame(() => requestAnimationFrame(finishIntro));
+        requestAnimationFrame(finishIntro);
     }
 
-    /* ---------- Başlıkları kelimelere böl (3B açılış için) ---------- */
-    document.querySelectorAll('[data-split]').forEach(el => {
+    /* ---------- Başlıkları kelimelere böl ---------- */
+    $$('[data-split]').forEach(el => {
         const words = el.textContent.trim().split(/\s+/);
         el.setAttribute('aria-label', words.join(' '));
-        el.innerHTML = words.map((w, i) => `<span class="w" aria-hidden="true"><span style="--i:${i}">${w}</span></span>`).join(' ');
-    });
-    document.querySelectorAll('.skill-group li').forEach(li => {
-        li.style.setProperty('--i', [...li.parentElement.children].indexOf(li));
-    });
-
-    /* ---------- Header: kaydırınca zemin ---------- */
-    const header = document.querySelector('.header');
-    const onScrollHeader = () => header.classList.toggle('is-scrolled', window.scrollY > 24);
-    onScrollHeader();
-    window.addEventListener('scroll', onScrollHeader, { passive: true });
-
-    /* ---------- Mobil menü ---------- */
-    const toggle = document.querySelector('.menu-toggle');
-    const nav = document.getElementById('site-nav');
-    const setMenu = (open) => {
-        nav.classList.toggle('is-open', open);
-        toggle.setAttribute('aria-expanded', String(open));
-        toggle.setAttribute('aria-label', open ? 'Menüyü kapat' : 'Menüyü aç');
-        document.body.style.overflow = open ? 'hidden' : '';
-        if (open) nav.querySelector('a').focus({ preventScroll: true });
-    };
-    toggle.addEventListener('click', () => setMenu(!nav.classList.contains('is-open')));
-    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && nav.classList.contains('is-open')) { setMenu(false); toggle.focus(); }
-    });
-    window.matchMedia('(min-width: 861px)').addEventListener('change', (e) => { if (e.matches) setMenu(false); });
-
-    /* ---------- Aktif bölümü menüde işaretle ---------- */
-    const links = [...nav.querySelectorAll('a[href^="#"]')];
-    const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
-    const spy = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (!entry.isIntersecting) return;
-            links.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + entry.target.id));
+        el.textContent = '';
+        words.forEach((w, i) => {
+            const outer = document.createElement('span');
+            outer.className = 'w';
+            outer.setAttribute('aria-hidden', 'true');
+            const inner = document.createElement('span');
+            inner.style.setProperty('--i', i);
+            inner.textContent = w;
+            outer.appendChild(inner);
+            el.appendChild(outer);
+            if (i < words.length - 1) el.appendChild(document.createTextNode(' '));
         });
-    }, { rootMargin: '-45% 0px -50% 0px' });
-    sections.forEach(s => spy.observe(s));
+    });
 
     /* ---------- Kaydırınca beliren öğeler ---------- */
-    const reveals = document.querySelectorAll('.reveal, [data-split], [data-scene]');
-    // Aynı gruptaki kardeşlere küçük gecikme ver
-    reveals.forEach(el => {
-        if (!el.classList.contains('reveal')) return;
-        const siblings = [...el.parentElement.children].filter(c => c.classList.contains('reveal'));
-        const i = siblings.indexOf(el);
+    const revealSel = '.hero-lead, .facts > div, .hero-actions, .step, .tool-row, .ref, .refs-note, .contact-lead, .mail-row, .contact-links';
+    $$(revealSel).forEach(el => {
+        el.classList.add('reveal');
+        const sib = [...el.parentElement.children].filter(c => c.matches(revealSel));
+        const i = sib.indexOf(el);
         if (i > 0) el.style.setProperty('--d', Math.min(i * 0.08, 0.4) + 's');
     });
-    if ('IntersectionObserver' in window && !reduceMotion) {
-        const io = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) { entry.target.classList.add('is-in'); io.unobserve(entry.target); }
-            });
-        }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
-        reveals.forEach(el => io.observe(el));
+    const toReveal = $$('.reveal, [data-split]');
+    if ('IntersectionObserver' in window && !reduce) {
+        const revealIO = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-in'); revealIO.unobserve(e.target); } });
+        }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
+        toReveal.forEach(el => revealIO.observe(el));
     } else {
-        reveals.forEach(el => el.classList.add('is-in'));
+        toReveal.forEach(el => el.classList.add('is-in'));
     }
 
-    /* ---------- Zaman çizelgesi: kaydırdıkça dolan çizgi ---------- */
-    const timeline = document.querySelector('.timeline');
-    const tlItems = [...document.querySelectorAll('.tl-item')];
-    let tlTicking = false;
-    const updateTimeline = () => {
-        tlTicking = false;
-        const rect = timeline.getBoundingClientRect();
-        const anchor = window.innerHeight * 0.6;
-        const p = Math.min(Math.max((anchor - rect.top) / rect.height, 0), 1);
-        timeline.style.setProperty('--progress', p.toFixed(3));
-        tlItems.forEach(item => {
-            item.classList.toggle('is-passed', item.getBoundingClientRect().top + 8 < anchor);
-        });
+    /* ---------- Header ve menü ---------- */
+    const header = $('.header');
+    const nav = $('#nav');
+    const menuBtn = $('.menu-btn');
+    const heroStage = $('.hero-stage');
+    const setMenu = (open) => {
+        nav.classList.toggle('is-open', open);
+        header.classList.toggle('menu-open', open);
+        menuBtn.setAttribute('aria-expanded', String(open));
+        menuBtn.setAttribute('aria-label', open ? 'Menüyü kapat' : 'Menüyü aç');
+        document.body.style.overflow = open ? 'hidden' : '';
     };
-    window.addEventListener('scroll', () => {
-        if (!tlTicking) { tlTicking = true; requestAnimationFrame(updateTimeline); }
-    }, { passive: true });
-    window.addEventListener('resize', updateTimeline);
-    updateTimeline();
+    menuBtn.addEventListener('click', () => setMenu(!nav.classList.contains('is-open')));
+    $$('a', nav).forEach(a => a.addEventListener('click', () => setMenu(false)));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('is-open')) { setMenu(false); menuBtn.focus(); } });
+    window.matchMedia('(min-width: 761px)').addEventListener('change', e => { if (e.matches) setMenu(false); });
 
-    /* ---------- Hareket katmanı: paralaks, 3B sahneler, şerit, imleç ---------- */
-    if (!reduceMotion) {
-        const hero = document.querySelector('.hero');
-        const bar = document.querySelector('.scroll-progress span');
-        const scenes = [...document.querySelectorAll('[data-scene]')];
-        const track = document.querySelector('.ticker-track');
-        const cursor = document.querySelector('.cursor');
-
-        // Şeridi kesintisiz döngü için çoğalt
-        if (track) track.innerHTML += track.innerHTML;
-
-        let lastY = window.scrollY, velocity = 0, tx = 0, skew = 0;
-        let cx = -100, cy = -100, tcx = -100, tcy = -100;
-        let lastT = performance.now();
-
-        const frame = (now) => {
-            const dt = Math.min((now - lastT) / 1000, 0.05);
-            lastT = now;
-            const vh = window.innerHeight;
-            const y = window.scrollY;
-
-            // ilerleme çubuğu
-            const max = document.documentElement.scrollHeight - vh;
-            bar.style.setProperty('--sp', max > 0 ? (y / max).toFixed(4) : 0);
-
-            // hero paralaksı
-            hero.style.setProperty('--hp', clamp(y / (hero.offsetHeight * 0.9), 0, 1).toFixed(4));
-
-            // 3B sahneler
-            scenes.forEach(el => {
-                const top = el.getBoundingClientRect().top;
-                const e = clamp((top - vh * 0.2) / (vh * 0.8), 0, 1);
-                el.style.setProperty('--e', e.toFixed(4));
-            });
-
-            // şerit: kaydırma hızına tepki verir
-            const dy = y - lastY;
-            lastY = y;
-            velocity += (dy / Math.max(dt, 0.001) - velocity) * 0.12;
-            if (track) {
-                const half = track.scrollWidth / 2;
-                tx -= (60 + Math.abs(velocity) * 0.35) * dt;
-                if (tx <= -half) tx += half;
-                skew += (clamp(-velocity * 0.012, -12, 12) - skew) * 0.1;
-                track.style.setProperty('--tx', tx.toFixed(2) + 'px');
-                track.style.setProperty('--tk', skew.toFixed(2) + 'deg');
-            }
-
-            // imleç
-            if (cursor && finePointer) {
-                cx += (tcx - cx) * 0.2;
-                cy += (tcy - cy) * 0.2;
-                cursor.style.setProperty('--cx', cx.toFixed(1) + 'px');
-                cursor.style.setProperty('--cy', cy.toFixed(1) + 'px');
-            }
-            requestAnimationFrame(frame);
-        };
-        requestAnimationFrame(frame);
-
-        // hero: imleçle 3B eğim
-        hero.addEventListener('pointermove', (e) => {
-            const r = hero.getBoundingClientRect();
-            hero.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 2 - 1).toFixed(3));
-            hero.style.setProperty('--my', ((e.clientY - r.top) / r.height * 2 - 1).toFixed(3));
+    const navLinks = $$('a[href^="#"]', nav);
+    const spy = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) navLinks.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + e.target.id));
         });
-        hero.addEventListener('pointerleave', () => {
-            hero.style.setProperty('--mx', 0);
-            hero.style.setProperty('--my', 0);
-        });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    navLinks.forEach(a => { const t = $(a.getAttribute('href')); if (t) spy.observe(t); });
 
-        if (finePointer) {
-            // imleç takibi
-            window.addEventListener('pointermove', (e) => {
-                tcx = e.clientX; tcy = e.clientY;
-                cursor.classList.remove('is-hidden');
-            }, { passive: true });
-            document.addEventListener('pointerleave', () => cursor.classList.add('is-hidden'));
-            document.addEventListener('pointerover', (e) => {
-                const hot = e.target.closest('a, button, [data-tilt], .project, label, input, textarea, canvas');
-                cursor.classList.toggle('is-hover', !!hot);
-            });
-
-            // eğilebilen kartlar
-            document.querySelectorAll('[data-tilt]').forEach(el => {
-                el.addEventListener('pointermove', (e) => {
-                    const r = el.getBoundingClientRect();
-                    const x = (e.clientX - r.left) / r.width, yy = (e.clientY - r.top) / r.height;
-                    el.classList.add('is-tilting');
-                    el.style.setProperty('--rx', ((x - 0.5) * 14).toFixed(2) + 'deg');
-                    el.style.setProperty('--ry', ((0.5 - yy) * 14).toFixed(2) + 'deg');
-                    el.style.setProperty('--gx', (x * 100).toFixed(1) + '%');
-                    el.style.setProperty('--gy', (yy * 100).toFixed(1) + '%');
-                });
-                el.addEventListener('pointerleave', () => {
-                    el.classList.remove('is-tilting');
-                    el.style.setProperty('--rx', '0deg');
-                    el.style.setProperty('--ry', '0deg');
-                });
-            });
-
-            // mıknatıslı butonlar
-            document.querySelectorAll('[data-magnet]').forEach(el => {
-                el.addEventListener('pointermove', (e) => {
-                    const r = el.getBoundingClientRect();
-                    el.classList.add('is-pulling');
-                    el.style.setProperty('--bx', ((e.clientX - r.left - r.width / 2) * 0.3).toFixed(1) + 'px');
-                    el.style.setProperty('--by', ((e.clientY - r.top - r.height / 2) * 0.4).toFixed(1) + 'px');
-                });
-                el.addEventListener('pointerleave', () => {
-                    el.classList.remove('is-pulling');
-                    el.style.setProperty('--bx', '0px');
-                    el.style.setProperty('--by', '0px');
-                });
-            });
+    /* ---------- İşler: yatay 3B galeri ve filtre ---------- */
+    const pin = $('.work-pin');
+    const track = $('.work-track');
+    const panels = $$('.panel');
+    let dist = 0;
+    const layoutGallery = () => {
+        if (desktopMQ.matches) {
+            dist = Math.max(0, track.scrollWidth - window.innerWidth);
+            pin.style.height = (window.innerHeight + dist) + 'px';
+        } else {
+            dist = 0;
+            pin.style.height = '';
         }
-    }
+    };
+    window.addEventListener('resize', layoutGallery);
+    desktopMQ.addEventListener('change', layoutGallery);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(layoutGallery);
+    layoutGallery();
 
-    /* ---------- İletişim formu (e-posta uygulamasını açar) ---------- */
-    const form = document.getElementById('contact-form');
-    const note = document.getElementById('form-note');
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const data = new FormData(form);
-        const name = String(data.get('name') || '').trim();
-        const email = String(data.get('email') || '').trim();
-        const subject = String(data.get('subject') || '').trim() || 'Portföy üzerinden mesaj';
-        const message = String(data.get('message') || '').trim();
+    // Mobilde şemaları görünür olunca çiz
+    const litIO = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting && !desktopMQ.matches) e.target.classList.add('is-lit'); });
+    }, { threshold: 0.35 });
+    panels.forEach(p => litIO.observe(p));
+    if (reduce) panels.forEach(p => p.classList.add('is-lit'));
 
-        const fields = { name: !!name, email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email), message: !!message };
-        Object.entries(fields).forEach(([key, ok]) => {
-            form.elements[key].setAttribute('aria-invalid', String(!ok));
+    const countEl = $('#work-count');
+    $$('.chip').forEach(chip => chip.addEventListener('click', () => {
+        const f = chip.dataset.filter;
+        $$('.chip').forEach(c => { const on = c === chip; c.classList.toggle('is-on', on); c.setAttribute('aria-pressed', String(on)); });
+        let n = 0;
+        panels.forEach(p => {
+            const show = f === 'all' || p.dataset.cat.split(' ').includes(f);
+            p.hidden = !show;
+            if (show) {
+                n++;
+                p.classList.remove('is-entering');
+                void p.offsetWidth;
+                p.classList.add('is-entering');
+            }
         });
-        const firstBad = Object.keys(fields).find(k => !fields[k]);
-        if (firstBad) {
-            note.classList.remove('is-ok');
-            note.textContent = firstBad === 'email'
-                ? 'Geçerli bir e-posta adresi girin; dönüşü bu adrese yapacağım.'
-                : 'Adınızı ve mesajınızı yazın, ardından tekrar deneyin.';
-            form.elements[firstBad].focus();
-            return;
+        countEl.textContent = n + ' proje gösteriliyor.';
+        layoutGallery();
+        const top = $('#work').getBoundingClientRect().top + window.scrollY;
+        if (window.scrollY > top + 200) window.scrollTo({ top: top - 20, behavior: reduce ? 'auto' : 'smooth' });
+    }));
+    panels.forEach(p => p.addEventListener('animationend', () => p.classList.remove('is-entering')));
+
+    /* ---------- Vaka çalışması penceresi ---------- */
+    const dialog = $('#case');
+    const caseContent = $('#case-content');
+    $$('[data-open]').forEach(btn => btn.addEventListener('click', () => {
+        const tpl = document.getElementById('case-' + btn.dataset.open);
+        if (!tpl) return;
+        caseContent.replaceChildren(tpl.content.cloneNode(true));
+        if (typeof dialog.showModal === 'function') {
+            dialog.showModal();
+            root.style.overflow = 'hidden';
+            dialog.querySelector('.case-card').scrollTop = 0;
         }
-        const body = [`Ad: ${name}`, `E-posta: ${email}`, '', message].join('\n');
-        window.location.href = `mailto:beycanelanur@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        note.classList.add('is-ok');
-        note.textContent = 'E-posta uygulamanız açıldı. Açılmadıysa doğrudan beycanelanur@gmail.com adresine yazabilirsiniz.';
+    }));
+    $('.case-close').addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
+    dialog.addEventListener('close', () => { root.style.overflow = ''; });
+
+    /* ---------- Yol: yapışkan yıl ---------- */
+    const yearEl = $('#year-now');
+    const steps = $$('.step');
+    if (steps[0]) steps[0].classList.add('is-current');
+    const setYear = (y) => {
+        if (yearEl.textContent === y) return;
+        yearEl.textContent = y;
+        if (!reduce) { yearEl.classList.remove('flip'); void yearEl.offsetWidth; yearEl.classList.add('flip'); }
+    };
+    const stepIO = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (!e.isIntersecting) return;
+            steps.forEach(s => s.classList.toggle('is-current', s === e.target));
+            setYear(e.target.dataset.year);
+        });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    steps.forEach(s => stepIO.observe(s));
+
+    /* ---------- Araç kutusu: araç → proje ---------- */
+    const readout = $('#tool-readout');
+    const tools = $$('.tool-row li');
+    const showTool = (li) => {
+        tools.forEach(t => t.classList.toggle('is-picked', t === li));
+        readout.textContent = '';
+        const b = document.createElement('strong');
+        b.textContent = li.textContent;
+        readout.appendChild(b);
+        readout.appendChild(document.createTextNode(li.dataset.used ? ' kullanıldığı proje: ' + li.dataset.used : ': bu sitedeki projelerde yer almıyor.'));
+    };
+    tools.forEach(li => {
+        li.addEventListener('pointerenter', () => showTool(li));
+        li.addEventListener('focus', () => showTool(li));
+        li.addEventListener('click', () => showTool(li));
     });
+
+    /* ---------- E-posta kopyala ---------- */
+    const copyBtn = $('#copy-mail');
+    const copyStatus = $('#copy-status');
+    copyBtn.addEventListener('click', async () => {
+        const mail = 'beycanelanur@gmail.com';
+        try {
+            await navigator.clipboard.writeText(mail);
+            copyStatus.textContent = 'Adres kopyalandı.';
+            copyBtn.textContent = 'Kopyalandı';
+        } catch {
+            copyStatus.textContent = 'Kopyalanamadı; adresi seçip kopyalayabilirsiniz: ' + mail;
+        }
+        setTimeout(() => { copyBtn.textContent = 'Adresi kopyala'; }, 2400);
+    });
+
+    /* ---------- Ana döngü: ilerleme, hero, galeri, imleç ---------- */
+    const bar = $('.progress span');
+    const hero = $('.hero');
+    const cursor = $('.cursor');
+    let cx = -100, cy = -100, tcx = -100, tcy = -100;
+
+    const frame = () => {
+        const vh = window.innerHeight, vw = window.innerWidth, y = window.scrollY;
+        const max = document.documentElement.scrollHeight - vh;
+        bar.style.setProperty('--sp', max > 0 ? (y / max).toFixed(4) : 0);
+
+        const stageH = heroStage.offsetHeight;
+        hero.style.setProperty('--hp', clamp(y / stageH, 0, 1).toFixed(4));
+        header.classList.toggle('is-solid', y > stageH - 80);
+
+        if (desktopMQ.matches && dist > 0) {
+            const r = pin.getBoundingClientRect();
+            const span = pin.offsetHeight - vh;
+            const p = span > 0 ? clamp(-r.top / span, 0, 1) : 0;
+            const x = -p * dist;
+            track.style.setProperty('--x', x.toFixed(1) + 'px');
+            panels.forEach(pn => {
+                if (pn.hidden) return;
+                const c = pn.offsetLeft + x + pn.offsetWidth / 2;
+                const off = (c - vw / 2) / vw;
+                const a = Math.abs(off);
+                pn.style.setProperty('--ry', clamp(-off * 42, -38, 38).toFixed(2) + 'deg');
+                pn.style.setProperty('--tz', (-a * 260).toFixed(1) + 'px');
+                pn.style.setProperty('--po', (1 - Math.min(a * 0.25, 0.2)).toFixed(3));
+                if (a < 0.32 && r.top < vh * 0.5) pn.classList.add('is-lit');
+            });
+        }
+
+        if (fine && cursor) {
+            cx += (tcx - cx) * 0.22;
+            cy += (tcy - cy) * 0.22;
+            cursor.style.setProperty('--cx', cx.toFixed(1) + 'px');
+            cursor.style.setProperty('--cy', cy.toFixed(1) + 'px');
+        }
+        requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+
+    /* ---------- İmleç, eğilen kartlar, mıknatıslı butonlar ---------- */
+    if (fine && !reduce) {
+        window.addEventListener('pointermove', e => { tcx = e.clientX; tcy = e.clientY; cursor.classList.remove('is-hidden'); }, { passive: true });
+        document.addEventListener('pointerleave', () => cursor.classList.add('is-hidden'));
+        document.addEventListener('pointerover', e => {
+            cursor.classList.toggle('is-hover', !!e.target.closest('a, button, [data-tilt], .tool-row li[data-used], canvas'));
+        });
+
+        $$('[data-tilt]').forEach(el => {
+            el.addEventListener('pointermove', e => {
+                const r = el.getBoundingClientRect();
+                const x = (e.clientX - r.left) / r.width, yy = (e.clientY - r.top) / r.height;
+                el.classList.add('is-tilting');
+                el.style.setProperty('--tx', ((x - 0.5) * 16).toFixed(2) + 'deg');
+                el.style.setProperty('--ty', ((0.5 - yy) * 16).toFixed(2) + 'deg');
+            });
+            el.addEventListener('pointerleave', () => {
+                el.classList.remove('is-tilting');
+                el.style.setProperty('--tx', '0deg');
+                el.style.setProperty('--ty', '0deg');
+            });
+        });
+
+        $$('[data-magnet]').forEach(el => {
+            el.addEventListener('pointermove', e => {
+                const r = el.getBoundingClientRect();
+                el.classList.add('is-pulling');
+                el.style.setProperty('--bx', ((e.clientX - r.left - r.width / 2) * 0.3).toFixed(1) + 'px');
+                el.style.setProperty('--by', ((e.clientY - r.top - r.height / 2) * 0.4).toFixed(1) + 'px');
+            });
+            el.addEventListener('pointerleave', () => {
+                el.classList.remove('is-pulling');
+                el.style.setProperty('--bx', '0px');
+                el.style.setProperty('--by', '0px');
+            });
+        });
+    }
 
     /* ======================================================
-       Hero: izometrik dijital ikiz
-       Binalar yükselir, araçlar yol ağında ilerler, parlayan
-       çerçeveler "yapay zekâ tespiti"ni temsil eder.
+       Hero: uydu görüntüsü üzerinde canlı segmentasyon
+       Tarama ışını geçtikçe binalar maskelenir; imleçle
+       yakındaki tespitler incelenir.
        ====================================================== */
-    const canvas = document.getElementById('city');
+    const canvas = $('#scan');
     if (!canvas || !canvas.getContext) return;
     const ctx = canvas.getContext('2d');
-
-    const C = {
-        ground: '#e1e8e9',
-        block: '#d6dfe1',
-        road: '#f7f9f8',
-        roadLine: 'rgba(227, 162, 58, .45)',
-        top: '#ffffff',
-        left: '#c8d5da',
-        right: '#a7bbc5',
-        edge: 'rgba(20, 34, 51, .22)',
-        water: '#0d7580',
-        park: '#b7dcd6',
-        tree: '#4fa39a',
-        car: '#e3a23a',
-        ink: '#142233'
+    const COL = {
+        ground: '#0b1f4b', road: '#12285b', lane: 'rgba(120,150,220,.18)',
+        roof: '#17326f', roofEdge: '#26468a', shadow: '#071431',
+        park: '#103462', tree: '#1c4c80',
+        mag: '#e0115f', label: '#ffffff'
     };
+    const ANGLE = -0.21;
+    const cosA = Math.cos(ANGLE), sinA = Math.sin(ANGLE);
 
-    // Basit tohumlu rastgele sayı üreteci: şehir her açılışta aynı görünsün
-    let seed = 7;
-    const rand = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+    let seed = 11;
+    const rnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
 
-    const N = 13;                 // ızgara boyutu
-    const isRoad = (i) => i % 4 === 0;
-    const buildings = [];
-    const parks = [];
-    for (let i = 0; i < N; i++) {
-        for (let j = 0; j < N; j++) {
-            if (isRoad(i) || isRoad(j)) continue;
-            const dc = Math.hypot(i - N / 2, j - N / 2);
-            if (rand() < 0.1) { parks.push({ i, j, trees: 1 + Math.floor(rand() * 3), r: rand() }); continue; }
-            const centerBoost = Math.max(0, 1 - dc / (N * 0.55));
-            const h = 0.5 + rand() * 1.6 + centerBoost * centerBoost * 3.2;
-            buildings.push({
-                i, j, target: h, h: 0, boost: 0, det: 0,
-                inset: 0.1 + rand() * 0.08,
-                delay: dc * 70 + rand() * 180
-            });
-        }
-    }
+    let W = 0, H = 0, dpr = 1, buildings = [], parks = [], roadsX = [], roadsY = [], ext = 0;
 
-    // Araçlar: her yol hattında iki yön
-    const cars = [];
-    for (let r = 0; r < N; r += 4) {
-        for (const axis of ['x', 'y']) {
-            const count = 2 + Math.floor(rand() * 2);
-            for (let k = 0; k < count; k++) {
-                const dir = rand() < 0.5 ? 1 : -1;
-                cars.push({ axis, line: r, dir, t: rand() * N, v: 0.9 + rand() * 0.9 });
+    const toScreen = (x, y) => [W / 2 + x * cosA - y * sinA, H / 2 + x * sinA + y * cosA];
+
+    const generate = () => {
+        seed = 11;
+        buildings = []; parks = []; roadsX = []; roadsY = [];
+        ext = Math.hypot(W, H) / 2 + 80;
+        const mk = (arr) => { let p = -ext; while (p < ext) { const w = 12 + rnd() * 10; arr.push([p, w]); p += 120 + rnd() * 110; } };
+        mk(roadsX); mk(roadsY);
+        for (let i = 0; i < roadsX.length - 1; i++) {
+            for (let j = 0; j < roadsY.length - 1; j++) {
+                const x0 = roadsX[i][0] + roadsX[i][1], x1 = roadsX[i + 1][0];
+                const y0 = roadsY[j][0] + roadsY[j][1], y1 = roadsY[j + 1][0];
+                if (x1 - x0 < 30 || y1 - y0 < 30) continue;
+                if (rnd() < 0.09) { parks.push({ x0, y0, x1, y1, trees: Array.from({ length: 6 + Math.floor(rnd() * 8) }, () => [x0 + 8 + rnd() * (x1 - x0 - 16), y0 + 8 + rnd() * (y1 - y0 - 16), 4 + rnd() * 6]) }); continue; }
+                // bloğu parsellere böl
+                const cols = 1 + Math.floor(rnd() * 3), rows = 1 + Math.floor(rnd() * 2);
+                const cw = (x1 - x0) / cols, rh = (y1 - y0) / rows;
+                for (let c = 0; c < cols; c++) for (let r = 0; r < rows; r++) {
+                    if (rnd() < 0.12) continue;
+                    const m = 5 + rnd() * 6;
+                    const bx = x0 + c * cw + m, by = y0 + r * rh + m;
+                    const bw = cw - m * 2 - rnd() * cw * 0.25, bh = rh - m * 2 - rnd() * rh * 0.25;
+                    if (bw < 14 || bh < 14) continue;
+                    const [sx, sy] = toScreen(bx + bw / 2, by + bh / 2);
+                    if (sx < -60 || sx > W + 60 || sy < -60 || sy > H + 60) continue;
+                    buildings.push({ x: bx, y: by, w: bw, h: bh, sx, sy, area: bw * bh, conf: (0.86 + rnd() * 0.12).toFixed(2), det: -1, hov: 0 });
+                }
             }
         }
-    }
+        const sorted = [...buildings].sort((a, b) => b.area - a.area);
+        const cut = sorted[Math.floor(sorted.length * 0.18)];
+        buildings.forEach(b => { b.labeled = cut ? b.area >= cut.area : false; });
+    };
 
-    let W = 0, H = 0, tw = 0, th = 0, ox = 0, oy = 0, dpr = 1;
     const resize = () => {
-        const rect = canvas.getBoundingClientRect();
-        dpr = Math.min(window.devicePixelRatio || 1, 2);
-        W = rect.width; H = rect.height;
-        canvas.width = Math.round(W * dpr);
-        canvas.height = Math.round(H * dpr);
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        tw = Math.min(W / (N + 0.4), (H / (N + 6)) * 2);
-        th = tw / 2;
-        ox = W / 2;
-        oy = (H - (N + 5.8) * th) / 2 + 5.8 * th;
-        if (reduceMotion) draw(performance.now());
-    };
-
-    const iso = (gx, gy, z = 0) => [ox + (gx - gy) * tw / 2, oy + (gx + gy) * th / 2 - z];
-
-    const poly = (pts, fill, stroke, lw = 1) => {
-        ctx.beginPath();
-        ctx.moveTo(pts[0][0], pts[0][1]);
-        for (let k = 1; k < pts.length; k++) ctx.lineTo(pts[k][0], pts[k][1]);
-        ctx.closePath();
-        if (fill) { ctx.fillStyle = fill; ctx.fill(); }
-        if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw; ctx.stroke(); }
-    };
-
-    const drawGround = () => {
-        poly([iso(0, 0), iso(N, 0), iso(N, N), iso(0, N)], C.road);
-        for (let bi = 0; bi < N; bi += 4) {
-            for (let bj = 0; bj < N; bj += 4) {
-                const x0 = bi + 1, y0 = bj + 1, x1 = Math.min(bi + 4, N), y1 = Math.min(bj + 4, N);
-                if (x0 >= N || y0 >= N) continue;
-                poly([iso(x0, y0), iso(x1, y0), iso(x1, y1), iso(x0, y1)], C.block);
-            }
-        }
-        // yol orta çizgileri
-        ctx.save();
-        ctx.setLineDash([tw * 0.18, tw * 0.22]);
-        ctx.strokeStyle = C.roadLine;
-        ctx.lineWidth = 1;
-        for (let r = 0; r < N; r += 4) {
-            let a = iso(r + 0.5, 0), b = iso(r + 0.5, N);
-            ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
-            a = iso(0, r + 0.5); b = iso(N, r + 0.5);
-            ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
-        }
-        ctx.restore();
-        // parklar
-        parks.forEach(p => {
-            poly([iso(p.i + .08, p.j + .08), iso(p.i + .92, p.j + .08), iso(p.i + .92, p.j + .92), iso(p.i + .08, p.j + .92)], C.park);
-        });
-    };
-
-    const drawPark = (p) => {
-        for (let k = 0; k < p.trees; k++) {
-            const gx = p.i + 0.3 + ((k * 0.37 + p.r) % 0.45);
-            const gy = p.j + 0.3 + ((k * 0.53 + p.r * 0.7) % 0.45);
-            const [x, y] = iso(gx, gy);
-            ctx.fillStyle = 'rgba(20,34,51,.12)';
-            ctx.beginPath(); ctx.ellipse(x, y, th * .22, th * .11, 0, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = C.tree;
-            ctx.beginPath(); ctx.arc(x, y - th * .3, th * .2, 0, Math.PI * 2); ctx.fill();
-        }
-    };
-
-    const drawBuilding = (b) => {
-        const z = (b.h + b.boost) * th;
-        if (z < 0.5) return;
-        const x0 = b.i + b.inset, y0 = b.j + b.inset, x1 = b.i + 1 - b.inset, y1 = b.j + 1 - b.inset;
-        const g = [iso(x0, y0), iso(x1, y0), iso(x1, y1), iso(x0, y1)];
-        const t = [iso(x0, y0, z), iso(x1, y0, z), iso(x1, y1, z), iso(x0, y1, z)];
-        poly([g[3], g[2], t[2], t[3]], C.left, C.edge);   // +y yüzü
-        poly([g[1], g[2], t[2], t[1]], C.right, C.edge);  // +x yüzü
-        // pencere bantları
-        if (b.h > 1.2) {
-            ctx.strokeStyle = 'rgba(255,255,255,.35)';
-            ctx.lineWidth = 1;
-            for (let f = th * 0.6; f < z - th * 0.3; f += th * 0.55) {
-                ctx.beginPath();
-                const a = iso(x1, y0 + .1, f), c = iso(x1, y1 - .1, f);
-                ctx.moveTo(a[0], a[1]); ctx.lineTo(c[0], c[1]); ctx.stroke();
-            }
-        }
-        poly(t, C.top, C.edge);
-        if (b.det > 0.01) {
-            ctx.save();
-            ctx.globalAlpha = Math.min(b.det, 1);
-            poly(t, 'rgba(13,117,128,.16)', C.water, 2);
-            // köşe işaretleri: tespit kutusu hissi
-            const [cx, cy] = iso((x0 + x1) / 2, (y0 + y1) / 2, z);
-            ctx.fillStyle = C.water;
-            ctx.beginPath(); ctx.arc(cx, cy, 2.4, 0, Math.PI * 2); ctx.fill();
-            ctx.restore();
-        }
-    };
-
-    const carPos = (c) => {
-        const lane = c.line + 0.5 + c.dir * 0.17;
-        return c.axis === 'x' ? [c.t, lane] : [lane, c.t];
-    };
-    const drawCar = (c) => {
-        const [gx, gy] = carPos(c);
-        const [x, y] = iso(gx, gy);
-        const tail = c.axis === 'x' ? iso(gx - c.dir * 0.45, gy) : iso(gx, gy - c.dir * 0.45);
-        const grad = ctx.createLinearGradient(tail[0], tail[1], x, y);
-        grad.addColorStop(0, 'rgba(227,162,58,0)');
-        grad.addColorStop(1, 'rgba(227,162,58,.55)');
-        ctx.strokeStyle = grad;
-        ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.moveTo(tail[0], tail[1]); ctx.lineTo(x, y); ctx.stroke();
-        ctx.fillStyle = C.car;
-        ctx.beginPath(); ctx.ellipse(x, y - 1.5, Math.max(3.2, tw * .09), Math.max(2.2, tw * .06), 0, 0, Math.PI * 2); ctx.fill();
-    };
-
-    // İmleç etkileşimi
-    const pointer = { x: -9999, y: -9999, active: false };
-    canvas.addEventListener('pointermove', (e) => {
         const r = canvas.getBoundingClientRect();
-        pointer.x = e.clientX - r.left; pointer.y = e.clientY - r.top; pointer.active = true;
-    });
-    canvas.addEventListener('pointerleave', () => { pointer.active = false; });
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        W = r.width; H = r.height;
+        canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+        generate();
+        if (reduce) drawStatic();
+    };
 
-    let start = Infinity;
-    let last = performance.now();
-    let nextDetect = Infinity;
-    introDone.then(() => { start = performance.now(); nextDetect = start + 1800; });
+    const pointer = { x: -999, y: -999, on: false };
+    canvas.addEventListener('pointermove', e => { const r = canvas.getBoundingClientRect(); pointer.x = e.clientX - r.left; pointer.y = e.clientY - r.top; pointer.on = true; });
+    canvas.addEventListener('pointerdown', e => { const r = canvas.getBoundingClientRect(); pointer.x = e.clientX - r.left; pointer.y = e.clientY - r.top; pointer.on = true; });
+    canvas.addEventListener('pointerleave', () => { pointer.on = false; });
+    if (!fine) { const cap = $('.hero-caption'); if (cap) cap.textContent = 'Canlı demo: uydu görüntüsü üzerinde bina segmentasyonu. Haritaya dokunarak tespitleri inceleyin.'; }
 
-    const step = (now) => {
-        const dt = Math.min((now - last) / 1000, 0.05);
-        last = now;
-        const elapsed = now - start;
+    let beamStart = Infinity;
+    const SWEEP = 5200, HOLD = 3800;
+    introDone.then(() => { beamStart = performance.now(); });
 
-        buildings.forEach(b => {
-            const k = Math.min(Math.max((elapsed - b.delay) / 900, 0), 1);
-            const ease = 1 - Math.pow(1 - k, 3);
-            b.h = b.target * ease;
-            let want = 0;
-            if (pointer.active) {
-                const [cx, cy] = iso(b.i + .5, b.j + .5, b.h * th);
-                const d = Math.hypot(cx - pointer.x, cy - pointer.y);
-                want = Math.max(0, 1 - d / (tw * 2.2)) * 1.6;
-            }
-            b.boost += (want - b.boost) * Math.min(dt * 8, 1);
-            b.det = Math.max(0, b.det - dt * 0.55);
+    const label = (text, x, y, strong) => {
+        ctx.font = '600 11px "Red Hat Text", sans-serif';
+        const w = ctx.measureText(text).width + 10;
+        ctx.fillStyle = strong ? '#ffffff' : COL.mag;
+        ctx.fillRect(x, y - 16, w, 16);
+        ctx.fillStyle = strong ? COL.mag : '#ffffff';
+        ctx.fillText(text, x + 5, y - 4.5);
+    };
+
+    const drawScene = (now, beamX, fade = 1) => {
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.fillStyle = COL.ground;
+        ctx.fillRect(0, 0, W, H);
+
+        // dünya koordinatları (döndürülmüş)
+        ctx.setTransform(dpr * cosA, dpr * sinA, -dpr * sinA, dpr * cosA, dpr * W / 2, dpr * H / 2);
+        ctx.fillStyle = COL.road;
+        roadsX.forEach(([p, w]) => ctx.fillRect(p, -ext, w, ext * 2));
+        roadsY.forEach(([p, w]) => ctx.fillRect(-ext, p, ext * 2, w));
+        ctx.strokeStyle = COL.lane; ctx.lineWidth = 1; ctx.setLineDash([10, 12]);
+        ctx.beginPath();
+        roadsX.forEach(([p, w]) => { ctx.moveTo(p + w / 2, -ext); ctx.lineTo(p + w / 2, ext); });
+        roadsY.forEach(([p, w]) => { ctx.moveTo(-ext, p + w / 2); ctx.lineTo(ext, p + w / 2); });
+        ctx.stroke(); ctx.setLineDash([]);
+
+        parks.forEach(pk => {
+            ctx.fillStyle = COL.park; ctx.fillRect(pk.x0, pk.y0, pk.x1 - pk.x0, pk.y1 - pk.y0);
+            ctx.fillStyle = COL.tree;
+            pk.trees.forEach(([tx, ty, tr]) => { ctx.beginPath(); ctx.arc(tx, ty, tr, 0, Math.PI * 2); ctx.fill(); });
         });
 
-        if (now > nextDetect && elapsed > 1400) {
-            const b = buildings[Math.floor(Math.random() * buildings.length)];
-            b.det = 1.4;
-            nextDetect = now + 700 + Math.random() * 900;
-        }
+        let nearest = null, nd = 1e9;
+        buildings.forEach(b => {
+            ctx.fillStyle = COL.shadow; ctx.fillRect(b.x + 4, b.y + 5, b.w, b.h);
+            ctx.fillStyle = COL.roof; ctx.fillRect(b.x, b.y, b.w, b.h);
+            ctx.strokeStyle = COL.roofEdge; ctx.lineWidth = 1; ctx.strokeRect(b.x + .5, b.y + .5, b.w - 1, b.h - 1);
 
-        if (elapsed > 900) {
-            cars.forEach(c => {
-                // kavşağa yaklaşırken hafif yavaşlama
-                const toCross = Math.abs(((c.t % 4) + 4) % 4 - 0.5);
-                const slow = toCross < 0.6 ? 0.55 + toCross * 0.75 : 1;
-                c.t += c.dir * c.v * slow * dt;
-                if (c.t > N) c.t -= N;
-                if (c.t < 0) c.t += N;
-            });
+            if (beamX !== null && b.sx < beamX && b.det < 0) b.det = now;
+            const age = b.det < 0 ? -1 : now - b.det;
+            const a = age < 0 ? 0 : clamp(age / 350, 0, 1) * fade;
+            if (pointer.on) {
+                const d = Math.hypot(b.sx - pointer.x, b.sy - pointer.y);
+                if (d < nd) { nd = d; nearest = b; }
+                b.hov += ((d < 130 ? 1 : 0) - b.hov) * 0.18;
+            } else b.hov *= 0.85;
+            const vis = Math.max(a, b.hov);
+            if (vis > 0.01) {
+                ctx.fillStyle = `rgba(224,17,95,${(0.34 * vis).toFixed(3)})`;
+                ctx.fillRect(b.x, b.y, b.w, b.h);
+                ctx.strokeStyle = b.hov > a ? `rgba(255,255,255,${vis.toFixed(3)})` : `rgba(224,17,95,${vis.toFixed(3)})`;
+                ctx.lineWidth = 1.8; ctx.strokeRect(b.x, b.y, b.w, b.h);
+            }
+        });
+
+        // ekran koordinatları: ışın ve etiketler
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        if (beamX !== null && beamX > -50 && beamX < W + 50) {
+            const g = ctx.createLinearGradient(beamX - 220, 0, beamX, 0);
+            g.addColorStop(0, 'rgba(224,17,95,0)'); g.addColorStop(1, 'rgba(224,17,95,.22)');
+            ctx.fillStyle = g; ctx.fillRect(beamX - 220, 0, 220, H);
+            ctx.fillStyle = COL.mag; ctx.fillRect(beamX - 1, 0, 2, H);
+        }
+        buildings.forEach(b => {
+            const age = b.det < 0 ? -1 : now - b.det;
+            if ((b.labeled && age > 200) || b.hov > 0.6) {
+                const [lx, ly] = toScreen(b.x, b.y);
+                ctx.globalAlpha = Math.max(clamp((age - 200) / 400, 0, 1) * (b.labeled ? fade : 0), b.hov);
+                label('bina ' + b.conf, lx, ly, b.hov > 0.6);
+                ctx.globalAlpha = 1;
+            }
+        });
+        if (pointer.on && nearest && nd < 160) {
+            // köşe işaretleri
+            ctx.setTransform(dpr * cosA, dpr * sinA, -dpr * sinA, dpr * cosA, dpr * W / 2, dpr * H / 2);
+            const b = nearest, k = 8, p = 6;
+            ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.beginPath();
+            [[b.x - p, b.y - p, 1, 1], [b.x + b.w + p, b.y - p, -1, 1], [b.x - p, b.y + b.h + p, 1, -1], [b.x + b.w + p, b.y + b.h + p, -1, -1]]
+                .forEach(([x, y, dx, dy]) => { ctx.moveTo(x, y + dy * k); ctx.lineTo(x, y); ctx.lineTo(x + dx * k, y); });
+            ctx.stroke();
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         }
     };
 
-    function draw(now) {
-        ctx.clearRect(0, 0, W, H);
-        drawGround();
-        const items = [];
-        buildings.forEach(b => items.push({ d: b.i + b.j + 1, f: () => drawBuilding(b) }));
-        parks.forEach(p => items.push({ d: p.i + p.j + 0.9, f: () => drawPark(p) }));
-        if (now - start > 900 || reduceMotion) {
-            cars.forEach(c => { const [gx, gy] = carPos(c); items.push({ d: gx + gy, f: () => drawCar(c) }); });
-        }
-        items.sort((a, b) => a.d - b.d);
-        items.forEach(it => it.f());
-    }
+    const drawStatic = () => {
+        const now = performance.now();
+        buildings.forEach(b => { if (b.sx < W * 0.62) b.det = now - 2000; });
+        drawScene(now, W * 0.62);
+    };
 
-    let running = false, rafId = 0;
+    let running = false, raf = 0, lastT = 0;
     const loop = (now) => {
-        step(now);
-        draw(now);
-        if (running) rafId = requestAnimationFrame(loop);
+        let beamX = null, fade = 1;
+        if (now >= beamStart) {
+            const t = (now - beamStart) % (SWEEP + HOLD);
+            if (t < lastT) buildings.forEach(b => { b.det = -1; });   // yeni tarama
+            lastT = t;
+            beamX = t < SWEEP ? -40 + (t / SWEEP) * (W + 80) : W + 100;
+            const fadeFrom = SWEEP + HOLD - 700;
+            if (t > fadeFrom) fade = 1 - (t - fadeFrom) / 700;    // maskeler yavaşça söner
+        }
+        drawScene(now, beamX, fade);
+        if (running) raf = requestAnimationFrame(loop);
     };
-
-    if (reduceMotion) {
-        buildings.forEach(b => { b.h = b.target; });
-        start = -10000;
-        new ResizeObserver(resize).observe(canvas);
-        resize();
-        return;
-    }
 
     new ResizeObserver(resize).observe(canvas);
     resize();
-
-    // Ekranda değilken çizmeyi durdur
-    new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting && !running) {
-            running = true; last = performance.now(); rafId = requestAnimationFrame(loop);
-        } else if (!entry.isIntersecting && running) {
-            running = false; cancelAnimationFrame(rafId);
-        }
+    if (reduce) return;
+    new IntersectionObserver(([e]) => {
+        if (e.isIntersecting && !running) { running = true; raf = requestAnimationFrame(loop); }
+        else if (!e.isIntersecting && running) { running = false; cancelAnimationFrame(raf); }
     }).observe(canvas);
 })();

@@ -8,294 +8,435 @@
     <meta property="og:title" content="Elanur Beycan | Portföy">
     <meta property="og:description" content="Uydu görüntüsünden dijital ikiz, ham veriden tahmin modeli. Yapay zekâ, veri bilimi ve backend alanında staj ve junior pozisyonlara açık.">
     <meta property="og:type" content="website">
-    <meta name="theme-color" content="#eef2f1">
+    <meta name="theme-color" content="#0b1f4b">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;700;800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@500;700;900&family=Red+Hat+Text:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 <a class="skip-link" href="#main">İçeriğe geç</a>
-<div class="intro" id="intro" aria-hidden="true">
-    <div class="intro-inner">
-        <svg class="intro-mark" viewBox="0 0 32 32"><path d="M16 3 29 10.5v11L16 29 3 21.5v-11z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3 10.5 16 18l13-7.5M16 18v11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-        <p class="intro-name">Elanur Beycan</p>
-        <p class="intro-count"><span id="intro-num">0</span>%</p>
-    </div>
+
+<div class="curtain" id="curtain" aria-hidden="true">
+    <div class="curtain-scan"></div>
+    <p class="curtain-name">Elanur Beycan</p>
+    <p class="curtain-count"><span id="curtain-num">0</span>%</p>
 </div>
-<div class="scroll-progress" aria-hidden="true"><span></span></div>
+<div class="progress" aria-hidden="true"><span></span></div>
 <div class="cursor" aria-hidden="true"></div>
 
-<header class="header" id="top">
-    <a href="#home" class="logo" aria-label="Elanur Beycan, ana sayfa">
-        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 29 10.5v11L16 29 3 21.5v-11z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M3 10.5 16 18l13-7.5M16 18v11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>
+<header class="header">
+    <a href="#top" class="brand" aria-label="Elanur Beycan, başa dön">
+        <span class="brand-mark" aria-hidden="true"></span>
         <span>Elanur Beycan</span>
     </a>
-    <button class="menu-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Menüyü aç">
-        <span></span><span></span>
-    </button>
-    <nav class="navbar" id="site-nav" aria-label="Ana menü">
-        <a href="#projects">Projeler</a>
-        <a href="#journey">Eğitim ve deneyim</a>
-        <a href="#skills">Yetenekler</a>
-        <a href="#references">Referanslar</a>
-        <a href="#contact" class="nav-cta" data-magnet>İletişim</a>
+    <nav class="nav" id="nav" aria-label="Ana menü">
+        <a href="#work">İşler</a>
+        <a href="#journey">Yol</a>
+        <a href="#toolbox">Araç kutusu</a>
+        <a href="#contact">İletişim</a>
     </nav>
+    <a class="header-cv" href="Elanur_Beycan_CV.pdf" target="_blank" rel="noopener" data-magnet>CV</a>
+    <button class="menu-btn" aria-expanded="false" aria-controls="nav" aria-label="Menüyü aç"><span></span><span></span></button>
 </header>
 
 <main id="main">
 
 <!-- HERO -->
-<section class="hero" id="home">
-    <div class="hero-text">
-        <p class="hero-status"><span class="pulse" aria-hidden="true"></span>Staj ve junior pozisyonlara açık</p>
-        <h1 class="hero-name">
-            <span class="line"><span>Elanur</span></span>
-            <span class="line"><span>Beycan</span></span>
-        </h1>
-        <p class="hero-lead">Uydu görüntüsünden şehrin dijital ikizini, ham veriden tahmin modelini kuruyorum.</p>
-        <p class="hero-sub">Bartın Üniversitesi'nde Bilgisayar Mühendisliği 4. sınıf öğrencisiyim. Python ile veri analizi, makine öğrenmesi, optimizasyon ve coğrafi veri işleme üzerine çalışıyor; projelerimi FastAPI, Docker, Kubernetes ve CI/CD ile ayağa kaldırıyorum.</p>
+<section class="hero" id="top" aria-label="Giriş">
+    <div class="hero-stage">
+        <canvas id="scan" aria-hidden="true"></canvas>
+        <div class="hero-shade" aria-hidden="true"></div>
+        <div class="hero-inner">
+            <p class="hero-kicker"><span class="dot" aria-hidden="true"></span>Staj ve junior pozisyonlara açık</p>
+            <h1 class="hero-name"><span class="row"><span>Elanur</span></span><span class="row"><span>Beycan</span></span></h1>
+            <p class="hero-caption">Canlı demo: uydu görüntüsü üzerinde bina segmentasyonu. İmleci haritada gezdirerek tespitleri inceleyin.</p>
+        </div>
+    </div>
+
+    <div class="hero-intro">
+        <p class="hero-lead">Uydu görüntüsünden şehrin dijital ikizini, ham veriden tahmin modelini kuruyorum. Fikirleri FastAPI, Docker ve Kubernetes ile çalışan servislere dönüştürüyorum.</p>
+        <dl class="facts">
+            <div><dt>Eğitim</dt><dd>Bilgisayar Mühendisliği, 4. sınıf, Bartın Üniversitesi</dd></div>
+            <div><dt>Konum</dt><dd>İstanbul</dd></div>
+            <div><dt>Aradığım</dt><dd>Yapay zekâ, veri bilimi veya backend alanında staj ya da junior pozisyon</dd></div>
+        </dl>
         <div class="hero-actions">
-            <a href="#projects" class="btn btn-primary" data-magnet>Projeleri gör</a>
-            <a href="Elanur_Beycan_CV.pdf" class="btn btn-ghost" data-magnet target="_blank" rel="noopener">CV'yi aç (PDF)</a>
+            <a class="btn btn-solid" href="#work" data-magnet>İşleri gör</a>
+            <a class="btn btn-line" href="mailto:beycanelanur@gmail.com" data-magnet>E-posta gönder</a>
         </div>
-        <ul class="hero-links" aria-label="Bağlantılar">
-            <li><a href="https://github.com/elanur04" target="_blank" rel="noopener">GitHub</a></li>
-            <li><a href="https://www.linkedin.com/in/elanurbeycan" target="_blank" rel="noopener">LinkedIn</a></li>
-            <li><a href="mailto:beycanelanur@gmail.com">beycanelanur@gmail.com</a></li>
-        </ul>
     </div>
-
-    <figure class="hero-visual">
-        <canvas id="city" aria-hidden="true"></canvas>
-        <figcaption>GeoSim'den esinlenen canlı bir dijital ikiz: parlayan çerçeveler yapay zekânın tespit ettiği binaları gösteriyor. İmleci şehrin üzerinde gezdirin.</figcaption>
-    </figure>
 </section>
 
-<div class="ticker" aria-hidden="true">
-    <div class="ticker-track">
-        <span>Python</span><i></i><span>FastAPI</span><i></i><span>Bilgisayarlı görü</span><i></i><span>OpenStreetMap</span><i></i><span>Scikit-learn</span><i></i><span>Kubernetes</span><i></i><span>Q-Learning</span><i></i><span>deck.gl</span><i></i><span>GitHub Actions</span><i></i><span>Veri analizi</span><i></i>
-    </div>
-</div>
-
-<!-- PROJECTS -->
-<section class="projects" id="projects" aria-labelledby="projects-title">
-    <div class="section-head">
-        <h2 data-split id="projects-title">Projeler</h2>
-        <p>Bitirme projesinden takım çalışmalarına; her birinde neyi benim yaptığımı ve sonucun ne olduğunu yazdım.</p>
-    </div>
-
-    <article class="feature" data-scene="strong">
-        <div class="feature-body">
-            <p class="tag">Bitirme projesi, Ağustos 2026'dan beri devam ediyor</p>
-            <h3>GeoSim</h3>
-            <p class="feature-lead">Seçilen bir harita alanının bina ve yol ağını çıkarıp harita üzerinde düzenlenebilir bir dijital ikize dönüştüren ve üzerinde trafik simülasyonu çalıştıran tam yığın platform.</p>
-            <ul class="facts">
-                <li>Uydu görüntülerinde örnek segmentasyonuyla bina tespiti yapan bir FastAPI servisi yazdım. 2×2 bölütleme ve IoU tabanlı non-maximum suppression ile tespiti iyileştirip maskeleri coğrafi referanslı GeoJSON poligonlarına çevirdim.</li>
-                <li>OpenStreetMap binalarını Shapely STRtree mekânsal indeksiyle yapay zekâ tespitleriyle birleştirdim; yol ağını Overpass API'den çekip yönlü bir grafa dönüştürdüm.</li>
-                <li>Akıllı Sürücü Modeli (IDM) ve Dijkstra rotalamasıyla tarayıcıda Web Worker içinde çalışan bir trafik simülasyonu kurdum. Mevcut ağ, yol kapatma ve yeni bağlantı yolu senaryoları karşılaştırılabiliyor.</li>
-            </ul>
-            <p class="stack">Python, FastAPI, OpenCV, Shapely, React, deck.gl, Mapbox, OpenStreetMap, GitHub Actions</p>
-            <a class="text-link" href="https://github.com/elanur04/geosim" target="_blank" rel="noopener">Kodu GitHub'da incele</a>
+<!-- WORK -->
+<section class="work" id="work" aria-labelledby="work-title">
+    <div class="wrap work-head">
+        <h2 id="work-title" data-split>Seçili işler</h2>
+        <div class="filters" role="group" aria-label="Projeleri filtrele">
+            <button class="chip is-on" data-filter="all" aria-pressed="true">Hepsi</button>
+            <button class="chip" data-filter="geo" aria-pressed="false">Coğrafi veri</button>
+            <button class="chip" data-filter="ml" aria-pressed="false">Makine öğrenmesi</button>
+            <button class="chip" data-filter="opt" aria-pressed="false">Optimizasyon</button>
+            <button class="chip" data-filter="cloud" aria-pressed="false">Bulut ve DevOps</button>
         </div>
-        <ol class="pipeline" aria-label="GeoSim veri akışı">
-            <li><span class="step-dot" aria-hidden="true"></span><strong>Uydu görüntüsü</strong><span>Mapbox karoları seçilen alan için indirilir</span></li>
-            <li><span class="step-dot" aria-hidden="true"></span><strong>Bina tespiti</strong><span>Örnek segmentasyonu, bölütleme ve NMS</span></li>
-            <li><span class="step-dot" aria-hidden="true"></span><strong>OSM ile birleştirme</strong><span>STRtree ile çakışan poligonlar eşleştirilir</span></li>
-            <li><span class="step-dot" aria-hidden="true"></span><strong>Dijital ikiz</strong><span>deck.gl harita katmanlarında düzenlenebilir model</span></li>
-            <li><span class="step-dot" aria-hidden="true"></span><strong>Trafik simülasyonu</strong><span>IDM ve Dijkstra, Web Worker içinde</span></li>
-        </ol>
-    </article>
+        <p class="work-hint" id="work-count" aria-live="polite">5 proje gösteriliyor.</p>
+    </div>
 
-    <div class="project-list" data-scene>
-        <article class="project reveal">
-            <div class="project-meta">
-                <p class="tag">Bulut ve DevOps, Mayıs–Haziran 2026</p>
-                <h3>Kuru Temizleme Yönetim Sistemi</h3>
-            </div>
-            <div class="project-detail">
-                <p>PHP/MySQL uygulamasını Docker ile konteynerleştirip Google Kubernetes Engine'e dağıttım. 3 replikalı rolling update Deployment, LoadBalancer ve ClusterIP servisleri, kalıcı disk (PVC), veritabanını otomatik kuran ConfigMap ve NetworkPolicy manifestlerini yazdım. GHCR ve Workload Identity ile her push'ta GKE'ye dağıtım yapan bir GitHub Actions hattı kurdum.</p>
-                <p class="stack">Docker, Kubernetes, GKE, GitHub Actions, PHP, MySQL</p>
-                <a class="text-link" href="https://github.com/elanur04/kuru-temizleme-k8s" target="_blank" rel="noopener">GitHub'da incele</a>
-            </div>
-        </article>
+    <div class="work-pin">
+        <div class="work-sticky">
+            <div class="work-track">
 
-        <article class="project reveal">
-            <div class="project-meta">
-                <p class="tag">Takım projesi, 7 kişi</p>
-                <h3>QoS Ağ Optimizasyonu</h3>
-            </div>
-            <div class="project-detail">
-                <p>250 düğümlü bir ağda gecikme, güvenilirlik ve kaynak kullanımını birlikte gözeten en iyi rotayı arayan sistem. Takımda Q-Learning ortamını (durumlar, eylemler, ödül fonksiyonu) ve topoloji üretecini ben geliştirdim; güvenilirliği toplanabilir bir maliyete çevirerek optimizasyonu hızlandırdım. Aynı zamanda proje koordinatörüydüm: görev dağılımını, modüllerin entegrasyonunu ve raporları yönettim.</p>
-                <p class="stack">Python, Q-Learning, Genetik Algoritma, Karınca Kolonisi, PyQt6</p>
-                <a class="text-link" href="https://github.com/elanur04/QoS-Network-Optimizer" target="_blank" rel="noopener">GitHub'da incele</a>
-            </div>
-        </article>
+                <article class="panel" data-cat="geo ml">
+                    <div class="panel-art">
+                        <svg viewBox="0 0 400 300" role="img" aria-label="Uydu görüntüsünde segmentasyon maskeleri ve yol ağı">
+                            <g class="art-base">
+                                <path d="M0 110H400M0 210H400M120 0V300M270 0V300" class="road"/>
+                                <rect x="18" y="18" width="70" height="60" class="bld"/><rect x="150" y="22" width="48" height="66" class="bld"/><rect x="212" y="30" width="40" height="40" class="bld"/><rect x="296" y="20" width="84" height="54" class="bld"/>
+                                <rect x="24" y="132" width="60" height="58" class="bld"/><rect x="146" y="130" width="96" height="44" class="bld"/><rect x="292" y="136" width="56" height="62" class="bld"/>
+                                <rect x="20" y="232" width="78" height="50" class="bld"/><rect x="150" y="230" width="44" height="52" class="bld"/><rect x="206" y="240" width="46" height="40" class="bld"/><rect x="300" y="232" width="70" height="48" class="bld"/>
+                            </g>
+                            <g class="art-draw">
+                                <path d="M150 22H198V88H150Z M146 130H242V174H146Z M292 136H348V198H292Z M20 232H98V282H20Z M296 20H380V74H296Z" class="mask"/>
+                                <path d="M0 110H400M270 0V300" class="route"/>
+                            </g>
+                            <text x="150" y="16" class="lbl">bina 0.94</text><text x="292" y="130" class="lbl">bina 0.91</text>
+                        </svg>
+                    </div>
+                    <div class="panel-body">
+                        <p class="panel-tag">Bitirme projesi, Ağustos 2026'dan beri</p>
+                        <h3>GeoSim</h3>
+                        <p>Seçilen bir harita alanının bina ve yol ağını çıkarıp düzenlenebilir bir dijital ikize dönüştüren, üzerinde trafik simülasyonu çalıştıran tam yığın platform.</p>
+                        <p class="panel-stack">Python, FastAPI, OpenCV, Shapely, React, deck.gl, Mapbox, OSM</p>
+                        <div class="panel-actions">
+                            <button class="btn btn-solid btn-sm" data-open="geosim">Vaka çalışmasını aç</button>
+                            <a class="link" href="https://github.com/elanur04/geosim" target="_blank" rel="noopener">GitHub</a>
+                        </div>
+                    </div>
+                </article>
 
-        <article class="project reveal">
-            <div class="project-meta">
-                <p class="tag">Optimizasyon</p>
-                <h3>3B Kutu Yerleştirme</h3>
-            </div>
-            <div class="project-detail">
-                <p>Genetik algoritma ile balina optimizasyon algoritmasını üç boyutlu kutu yerleştirme probleminde karşılaştıran görsel bir uygulama. Yerleşimler Plotly ile 3B olarak çiziliyor, Streamlit arayüzünden parametreler değiştirilebiliyor.</p>
-                <p class="stack">Python, Streamlit, Plotly, Genetik Algoritma, Balina Optimizasyonu</p>
-                <a class="text-link" href="https://github.com/elanur04" target="_blank" rel="noopener">GitHub profilinde incele</a>
-            </div>
-        </article>
+                <article class="panel" data-cat="cloud">
+                    <div class="panel-art">
+                        <svg viewBox="0 0 400 300" role="img" aria-label="Yük dengeleyici, üç uygulama podu ve veritabanı">
+                            <g class="art-base">
+                                <rect x="150" y="26" width="100" height="34" rx="17" class="node"/>
+                                <rect x="52" y="120" width="76" height="60" rx="10" class="node"/><rect x="162" y="120" width="76" height="60" rx="10" class="node"/><rect x="272" y="120" width="76" height="60" rx="10" class="node"/>
+                                <path d="M162 236a38 10 0 0 0 76 0v34a38 10 0 0 1-76 0Z" class="node"/><ellipse cx="200" cy="236" rx="38" ry="10" class="node"/>
+                            </g>
+                            <g class="art-draw">
+                                <path d="M200 60V120M200 60L90 120M200 60L310 120M90 180L190 228M200 180V226M310 180L210 228" class="route"/>
+                            </g>
+                            <text x="200" y="48" class="lbl c">LoadBalancer</text>
+                            <text x="90" y="155" class="lbl c">pod</text><text x="200" y="155" class="lbl c">pod</text><text x="310" y="155" class="lbl c">pod</text>
+                            <text x="200" y="292" class="lbl c">MySQL + PVC</text>
+                        </svg>
+                    </div>
+                    <div class="panel-body">
+                        <p class="panel-tag">Bulut ve DevOps, Mayıs–Haziran 2026</p>
+                        <h3>Kuru Temizleme Yönetim Sistemi</h3>
+                        <p>PHP/MySQL uygulamasını konteynerleştirip Google Kubernetes Engine'e dağıttım; her push'ta otomatik dağıtım yapan bir CI/CD hattı kurdum.</p>
+                        <p class="panel-stack">Docker, Kubernetes, GKE, GitHub Actions, PHP, MySQL</p>
+                        <div class="panel-actions">
+                            <button class="btn btn-solid btn-sm" data-open="k8s">Vaka çalışmasını aç</button>
+                            <a class="link" href="https://github.com/elanur04/kuru-temizleme-k8s" target="_blank" rel="noopener">GitHub</a>
+                        </div>
+                    </div>
+                </article>
 
-        <article class="project reveal">
-            <div class="project-meta">
-                <p class="tag">Makine öğrenmesi</p>
-                <h3>Öğrenci Depresyon Tahmini</h3>
+                <article class="panel" data-cat="opt ml">
+                    <div class="panel-art">
+                        <svg viewBox="0 0 400 300" role="img" aria-label="Ağ grafı üzerinde vurgulanan en iyi rota">
+                            <g class="art-base">
+                                <path d="M40 150L110 70L200 110L290 60L360 140L300 230L200 200L110 240Z M110 70L110 240M200 110L200 200M290 60L300 230M40 150L200 110M200 200L360 140" class="road"/>
+                                <circle cx="40" cy="150" r="9" class="node"/><circle cx="110" cy="70" r="9" class="node"/><circle cx="200" cy="110" r="9" class="node"/><circle cx="290" cy="60" r="9" class="node"/><circle cx="360" cy="140" r="9" class="node"/><circle cx="300" cy="230" r="9" class="node"/><circle cx="200" cy="200" r="9" class="node"/><circle cx="110" cy="240" r="9" class="node"/>
+                            </g>
+                            <g class="art-draw"><path d="M40 150L200 110L200 200L360 140" class="route"/></g>
+                            <text x="40" y="180" class="lbl c">S</text><text x="360" y="170" class="lbl c">D</text>
+                        </svg>
+                    </div>
+                    <div class="panel-body">
+                        <p class="panel-tag">Takım projesi, 7 kişi</p>
+                        <h3>QoS Ağ Optimizasyonu</h3>
+                        <p>250 düğümlü ağda gecikme, güvenilirlik ve kaynak kullanımını birlikte gözeten rotayı arayan sistem. Q-Learning ortamını geliştirdim, projeyi koordine ettim.</p>
+                        <p class="panel-stack">Python, Q-Learning, Genetik Algoritma, Karınca Kolonisi, PyQt6</p>
+                        <div class="panel-actions">
+                            <button class="btn btn-solid btn-sm" data-open="qos">Vaka çalışmasını aç</button>
+                            <a class="link" href="https://github.com/elanur04/QoS-Network-Optimizer" target="_blank" rel="noopener">GitHub</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="panel" data-cat="opt">
+                    <div class="panel-art">
+                        <svg viewBox="0 0 400 300" role="img" aria-label="Konteyner içine yerleştirilmiş kutular">
+                            <g class="art-base">
+                                <path d="M80 110L200 50L320 110V220L200 280L80 220Z M80 110L200 170L320 110M200 170V280" class="road"/>
+                                <path d="M110 160L170 130L230 160L170 190Z M110 160V200L170 230V190 M230 160V200L170 230" class="node"/>
+                                <path d="M190 120L240 95L290 120L240 145Z M190 120V150L240 175V145 M290 120V150L240 175" class="node"/>
+                            </g>
+                            <g class="art-draw"><path d="M150 205L205 178L260 205L205 232Z M150 205V235L205 262V232 M260 205V235L205 262" class="mask"/></g>
+                        </svg>
+                    </div>
+                    <div class="panel-body">
+                        <p class="panel-tag">Optimizasyon</p>
+                        <h3>3B Kutu Yerleştirme</h3>
+                        <p>Genetik algoritma ile balina optimizasyon algoritmasını üç boyutlu kutu yerleştirme probleminde karşılaştıran görsel uygulama. Yerleşimler Plotly ile 3B çiziliyor.</p>
+                        <p class="panel-stack">Python, Streamlit, Plotly, Genetik Algoritma, Balina Optimizasyonu</p>
+                        <div class="panel-actions">
+                            <a class="link" href="https://github.com/elanur04" target="_blank" rel="noopener">GitHub profili</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="panel" data-cat="ml">
+                    <div class="panel-art">
+                        <svg viewBox="0 0 400 300" role="img" aria-label="ROC eğrisi, AUC 0,91">
+                            <g class="art-base">
+                                <path d="M60 250H360M60 250V30" class="road"/>
+                                <path d="M60 250L360 30" class="dash"/>
+                            </g>
+                            <g class="art-draw">
+                                <path d="M60 250C70 120 120 70 200 52S330 34 360 30V250Z" class="area"/>
+                                <path d="M60 250C70 120 120 70 200 52S330 34 360 30" class="route"/>
+                            </g>
+                            <text x="236" y="170" class="big">AUC 0,91</text>
+                            <text x="210" y="280" class="lbl c">yanlış pozitif oranı</text>
+                        </svg>
+                    </div>
+                    <div class="panel-body">
+                        <p class="panel-tag">Makine öğrenmesi</p>
+                        <h3>Öğrenci Depresyon Tahmini</h3>
+                        <p>27.901 kayıtta keşifsel analiz ve öznitelik mühendisliği; dört sınıflandırıcıyı karşılaştırıp en iyisini Streamlit arayüzüne taşıdım.</p>
+                        <dl class="metrics">
+                            <div data-tilt><dt>Test doğruluğu (SVM)</dt><dd>%84</dd></div>
+                            <div data-tilt><dt>ROC AUC (Random Forest)</dt><dd>0,91</dd></div>
+                        </dl>
+                        <div class="panel-actions">
+                            <button class="btn btn-solid btn-sm" data-open="depresyon">Vaka çalışmasını aç</button>
+                            <a class="link" href="https://github.com/elanur04/student_depression" target="_blank" rel="noopener">GitHub</a>
+                        </div>
+                    </div>
+                </article>
+
             </div>
-            <div class="project-detail">
-                <p>27.901 kayıtlık veri setinde keşifsel analiz, ön işleme ve öznitelik mühendisliği yaptım. SVM, Random Forest, KNN ve lojistik regresyonu karşılaştırdım; en iyi model Streamlit arayüzünde tahmin yapıyor.</p>
-                <dl class="metrics">
-                    <div data-tilt><dt>Test doğruluğu (SVM)</dt><dd>%84</dd></div>
-                    <div data-tilt><dt>ROC AUC (Random Forest)</dt><dd>0,91</dd></div>
-                    <div data-tilt><dt>Test kaydı</dt><dd>5.581</dd></div>
-                </dl>
-                <p class="stack">Python, Scikit-learn, Pandas, NumPy, Matplotlib, Seaborn, Streamlit</p>
-                <a class="text-link" href="https://github.com/elanur04/student_depression" target="_blank" rel="noopener">GitHub'da incele</a>
-            </div>
-        </article>
+        </div>
     </div>
 </section>
+
+<!-- CASE STUDY DIALOG -->
+<dialog class="case" id="case" aria-labelledby="case-title">
+    <div class="case-card">
+        <button class="case-close" aria-label="Vaka çalışmasını kapat">Kapat</button>
+        <div class="case-content" id="case-content"></div>
+    </div>
+</dialog>
+
+<template id="case-geosim">
+    <p class="panel-tag">Bitirme projesi</p>
+    <h2 id="case-title">GeoSim</h2>
+    <p class="case-lead">OpenStreetMap'te eksik olan binaları uydu görüntüsünden tespit edip haritaya ekleyen, ardından ortaya çıkan yol ağında trafik senaryolarını karşılaştıran bir dijital ikiz platformu.</p>
+    <div class="case-grid">
+        <section><h3>Problem</h3><p>OSM verisi her bölgede eksiksiz değil; simülasyon için hem binaların hem de bağlantılı bir yol grafının doğru olması gerekiyor.</p></section>
+        <section><h3>Yaklaşım</h3><ul>
+            <li>Uydu görüntülerinde örnek segmentasyonuyla bina tespiti yapan FastAPI servisi; 2×2 bölütleme ve IoU tabanlı non-maximum suppression ile iyileştirme.</li>
+            <li>Maskeleri coğrafi referanslı GeoJSON poligonlarına çevirme; Shapely STRtree ile OSM binalarıyla eşleştirme.</li>
+            <li>Overpass API'den gelen yolları kavşak bağlantılarıyla yönlü grafa dönüştürme.</li>
+            <li>Akıllı Sürücü Modeli (IDM) ve Dijkstra ile Web Worker içinde çalışan trafik simülasyonu; mevcut ağ, yol kapatma ve yeni bağlantı yolu senaryoları.</li>
+        </ul></section>
+        <section><h3>Doğrulama</h3><p>Backend birim testleri ile frontend simülasyon, koordinat ve düzenleme testleri; GitHub Actions bunlarla lint ve production build kontrollerini çalıştırıyor.</p></section>
+        <section><h3>Teknolojiler</h3><p>Python, FastAPI, OpenCV, Shapely, SQLite, React, Vite, deck.gl, Mapbox GL, OpenStreetMap</p></section>
+    </div>
+    <a class="btn btn-solid" href="https://github.com/elanur04/geosim" target="_blank" rel="noopener">Kodu GitHub'da incele</a>
+</template>
+
+<template id="case-k8s">
+    <p class="panel-tag">Bulut ve DevOps</p>
+    <h2 id="case-title">Kuru Temizleme Yönetim Sistemi</h2>
+    <p class="case-lead">Saklı yordamlar ve tetikleyiciler içeren bir PHP/MySQL uygulamasını bulutta, kendi kendini onaran ve otomatik dağıtılan bir sisteme taşıdım.</p>
+    <div class="case-grid">
+        <section><h3>Mimari</h3><ul>
+            <li>3 replikalı, rolling update yapan web Deployment'ı ve tekil MySQL podu.</li>
+            <li>Dışarıya açık LoadBalancer, yalnızca küme içinden erişilen ClusterIP servisi.</li>
+            <li>Veritabanı için kalıcı disk (PVC); pod çökse de kayıtlar korunuyor.</li>
+        </ul></section>
+        <section><h3>Sıfır müdahaleli kurulum</h3><p>ConfigMap, veritabanı tablolarını, saklı yordamları ve tetikleyicileri MySQL ilk açıldığında otomatik kuruyor.</p></section>
+        <section><h3>Güvenlik ve CI/CD</h3><p>NetworkPolicy ile veritabanına erişimi kısıtladım. GHCR ve Workload Identity kullanan GitHub Actions hattı her push'ta GKE'ye dağıtım yapıyor.</p></section>
+        <section><h3>Teknolojiler</h3><p>Docker, Docker Compose, Kubernetes, GKE, GitHub Actions, PHP 8.2, Apache, MySQL 8.0</p></section>
+    </div>
+    <a class="btn btn-solid" href="https://github.com/elanur04/kuru-temizleme-k8s" target="_blank" rel="noopener">Kodu GitHub'da incele</a>
+</template>
+
+<template id="case-qos">
+    <p class="panel-tag">Takım projesi, 7 kişi</p>
+    <h2 id="case-title">QoS Ağ Optimizasyonu</h2>
+    <p class="case-lead">Çelişen kalite ölçütlerini dengeleyen rota arama problemini NP-zor bir optimizasyon olarak ele alıp pekiştirmeli öğrenme ve metasezgisellerle çözdük.</p>
+    <div class="case-grid">
+        <section><h3>Problem</h3><p>250 düğümlü Erdős–Rényi ağında gecikmeyi azaltırken güvenilirliği artırıp bant genişliğini verimli kullanan rotayı bulmak; ölçütler ağırlıklı toplam yöntemiyle dengeleniyor.</p></section>
+        <section><h3>Rolüm</h3><ul>
+            <li>Q-Learning ortamını kurdum: durumlar, eylemler ve yol maliyetine dayalı ödül fonksiyonu.</li>
+            <li>250 düğümlü topoloji üretecini ve kaynak-hedef bağlantı kontrolünü yazdım.</li>
+            <li>Çarpımsal güvenilirliği toplanabilir bir maliyete çevirdim.</li>
+            <li>Proje koordinatörü olarak görev dağılımını, entegrasyonu, raporları ve teslimi yönettim.</li>
+        </ul></section>
+        <section><h3>Karşılaştırma</h3><p>Q-Learning, genetik algoritma ve karınca kolonisi aynı ağda çalıştırılıp PyQt6 masaüstü arayüzünde karşılaştırılıyor.</p></section>
+        <section><h3>Teknolojiler</h3><p>Python, Q-Learning, Genetik Algoritma, Karınca Kolonisi, PyQt6, pyqtgraph</p></section>
+    </div>
+    <a class="btn btn-solid" href="https://github.com/elanur04/QoS-Network-Optimizer" target="_blank" rel="noopener">Kodu GitHub'da incele</a>
+</template>
+
+<template id="case-depresyon">
+    <p class="panel-tag">Makine öğrenmesi</p>
+    <h2 id="case-title">Öğrenci Depresyon Tahmini</h2>
+    <p class="case-lead">Öğrencilerin ruh sağlığını etkileyen akademik ve yaşam tarzı faktörlerini inceleyen, eğitim amaçlı bir sınıflandırma çalışması.</p>
+    <div class="case-grid">
+        <section><h3>Veri</h3><p>27.901 kayıt, 18 değişken. Eksik değerler mod/medyan ile dolduruldu, kategorik değişkenler sayısallaştırıldı; uyku ve çalışma dengesini ölçen yeni bir öznitelik türetildi.</p></section>
+        <section><h3>Modeller</h3>
+            <table class="case-table">
+                <thead><tr><th>Model</th><th>Doğruluk</th><th>F1</th></tr></thead>
+                <tbody>
+                    <tr><td>SVM (RBF)</td><td>0,84</td><td>0,83</td></tr>
+                    <tr><td>Lojistik regresyon</td><td>0,83</td><td>0,83</td></tr>
+                    <tr><td>Random Forest</td><td>0,83</td><td>0,83</td></tr>
+                    <tr><td>KNN (k=5)</td><td>0,81</td><td>0,81</td></tr>
+                </tbody>
+            </table>
+            <p class="case-note">Test seti 5.581 kayıt. Random Forest ROC AUC 0,91.</p>
+        </section>
+        <section><h3>Bulgular</h3><p>Akademik baskı, az uyku ile uzun çalışma saatleri ve ailede ruhsal hastalık geçmişi depresyonla ilişkili çıktı.</p></section>
+        <section><h3>Teknolojiler</h3><p>Python, Scikit-learn, Pandas, NumPy, Matplotlib, Seaborn, Streamlit</p></section>
+    </div>
+    <a class="btn btn-solid" href="https://github.com/elanur04/student_depression" target="_blank" rel="noopener">Kodu GitHub'da incele</a>
+</template>
 
 <!-- JOURNEY -->
 <section class="journey" id="journey" aria-labelledby="journey-title">
-    <div class="section-head">
-        <h2 data-split id="journey-title">Eğitim ve deneyim</h2>
+    <div class="wrap">
+        <h2 id="journey-title" data-split>Yol</h2>
+        <div class="journey-grid">
+            <div class="year-rail" aria-hidden="true"><div class="year"><span id="year-now">2023</span></div></div>
+            <ol class="steps">
+                <li class="step" data-year="2023">
+                    <time>Eylül 2023</time>
+                    <h3>Bartın Üniversitesi, Bilgisayar Mühendisliği</h3>
+                    <p>Lisansa başladım. Yapay Zekâ ve Veri Bilimi Kulübü'nün yönetim ekibindeyim ve kulüpte makine öğrenmesi eğitimleri veriyorum.</p>
+                </li>
+                <li class="step" data-year="2024">
+                    <time>Temmuz–Eylül 2024</time>
+                    <h3>Beranet, Web Geliştirici Stajyer</h3>
+                    <p>İstanbul'da müşteri taleplerine göre HTML, CSS ve PHP ile web sayfaları geliştirdim; sürüm kontrolünde Git kullandım.</p>
+                </li>
+                <li class="step" data-year="2025">
+                    <time>Kasım 2024 – Haziran 2025</time>
+                    <h3>AkademiQ.Ai, Makine Öğrenmesi Eğitimi</h3>
+                    <p>Veri ön işleme, öznitelik mühendisliği, ensemble yöntemler ve model değerlendirme üzerine uygulamalı sertifika programını tamamladım.</p>
+                </li>
+                <li class="step" data-year="2025">
+                    <time>2025</time>
+                    <h3>Siber Vatan (BAKKA) ve TEKNOFEST 2025</h3>
+                    <p>Siber güvenlik sertifikası aldım; TEKNOFEST 2025'te organizasyon gönüllüsü olarak görev yaptım.</p>
+                </li>
+                <li class="step" data-year="2026">
+                    <time>Ağustos 2026</time>
+                    <h3>Bitirme projesi: GeoSim</h3>
+                    <p>Yapay zekâ destekli coğrafi dijital ikiz ve trafik simülasyonu platformunu geliştirmeye başladım.</p>
+                </li>
+                <li class="step" data-year="2027">
+                    <time>Temmuz 2027 (beklenen)</time>
+                    <h3>Mezuniyet</h3>
+                    <p>Bu tarihe kadar staj ve junior pozisyonlara açığım.</p>
+                </li>
+            </ol>
+        </div>
     </div>
-    <ol class="timeline" data-scene>
-        <li class="comet" aria-hidden="true"></li>
-        <li class="tl-item reveal">
-            <time>Eylül 2023</time>
-            <h3>Bartın Üniversitesi, Bilgisayar Mühendisliği</h3>
-            <p>Lisans eğitimime başladım; mezuniyet Temmuz 2027'de bekleniyor. Yapay Zekâ ve Veri Bilimi Kulübü'nün yönetim ekibindeyim ve kulüpte makine öğrenmesi eğitimleri veriyorum.</p>
-        </li>
-        <li class="tl-item reveal">
-            <time>Temmuz–Eylül 2024</time>
-            <h3>Beranet, Web Geliştirici Stajyer</h3>
-            <p>İstanbul'da müşteri taleplerine göre HTML, CSS ve PHP ile web sayfaları geliştirdim ve güncelledim; sürüm kontrolünde Git kullandım.</p>
-        </li>
-        <li class="tl-item reveal">
-            <time>Kasım 2024 – Haziran 2025</time>
-            <h3>AkademiQ.Ai, Makine Öğrenmesi Eğitimi</h3>
-            <p>Veri ön işleme, öznitelik mühendisliği, sınıflandırma ve regresyon, ensemble yöntemler ve model değerlendirme üzerine uygulamalı sertifika programını tamamladım.</p>
-        </li>
-        <li class="tl-item reveal">
-            <time>2025</time>
-            <h3>Siber Vatan (BAKKA) ve TEKNOFEST 2025</h3>
-            <p>Batı Karadeniz Kalkınma Ajansı'nın Siber Vatan programından siber güvenlik sertifikası aldım; TEKNOFEST 2025'te organizasyon gönüllüsü olarak görev yaptım.</p>
-        </li>
-        <li class="tl-item reveal">
-            <time>Ağustos 2026</time>
-            <h3>Bitirme projesi: GeoSim</h3>
-            <p>Yapay zekâ destekli coğrafi dijital ikiz ve trafik simülasyonu platformunu geliştirmeye başladım.</p>
-        </li>
-    </ol>
 </section>
 
-<!-- SKILLS -->
-<section class="skills" id="skills" aria-labelledby="skills-title">
-    <div class="section-head">
-        <h2 data-split id="skills-title">Yetenekler</h2>
-    </div>
-    <div class="skill-groups" data-scene>
-        <div class="skill-group reveal">
-            <h3>Programlama dilleri</h3>
-            <ul><li>Python</li><li>SQL</li><li>JavaScript</li><li>Java</li><li>C#</li><li>PHP</li></ul>
+<!-- TOOLBOX -->
+<section class="toolbox" id="toolbox" aria-labelledby="toolbox-title">
+    <div class="wrap">
+        <div class="toolbox-head">
+            <h2 id="toolbox-title" data-split>Araç kutusu</h2>
+            <p>Bir aracın üzerine gelin ya da dokunun; hangi projede kullandığım aşağıda görünür.</p>
         </div>
-        <div class="skill-group reveal">
-            <h3>Veri analizi ve makine öğrenmesi</h3>
-            <ul><li>Keşifsel veri analizi</li><li>Veri ön işleme</li><li>Sınıflandırma ve regresyon</li><li>Model değerlendirme</li><li>Çapraz doğrulama</li><li>Görüntü işleme</li><li>Q-Learning</li><li>Genetik algoritma</li><li>Metasezgiseller</li></ul>
+        <div class="tool-rows">
+            <div class="tool-row"><h3>Programlama</h3><ul>
+                <li tabindex="0" data-used="GeoSim, QoS, Kutu Yerleştirme, Depresyon Tahmini">Python</li>
+                <li tabindex="0" data-used="Kuru Temizleme">SQL</li>
+                <li tabindex="0" data-used="GeoSim (React arayüzü)">JavaScript</li>
+                <li tabindex="0">Java</li><li tabindex="0">C#</li>
+                <li tabindex="0" data-used="Kuru Temizleme, Beranet stajı">PHP</li>
+            </ul></div>
+            <div class="tool-row"><h3>Veri ve makine öğrenmesi</h3><ul>
+                <li tabindex="0" data-used="Depresyon Tahmini">Scikit-learn</li>
+                <li tabindex="0" data-used="Depresyon Tahmini">Pandas</li>
+                <li tabindex="0" data-used="Depresyon Tahmini">NumPy</li>
+                <li tabindex="0" data-used="Depresyon Tahmini">Matplotlib ve Seaborn</li>
+                <li tabindex="0" data-used="Kutu Yerleştirme">Plotly</li>
+                <li tabindex="0" data-used="Depresyon Tahmini, Kutu Yerleştirme">Streamlit</li>
+                <li tabindex="0" data-used="GeoSim">OpenCV</li>
+                <li tabindex="0" data-used="QoS">Q-Learning</li>
+                <li tabindex="0" data-used="QoS, Kutu Yerleştirme">Genetik algoritma</li>
+                <li tabindex="0" data-used="QoS (karınca kolonisi), Kutu Yerleştirme (balina)">Metasezgiseller</li>
+            </ul></div>
+            <div class="tool-row"><h3>Web ve coğrafi veri</h3><ul>
+                <li tabindex="0" data-used="GeoSim">FastAPI</li>
+                <li tabindex="0" data-used="GeoSim">React</li>
+                <li tabindex="0" data-used="GeoSim">deck.gl</li>
+                <li tabindex="0" data-used="GeoSim">Mapbox</li>
+                <li tabindex="0" data-used="GeoSim">OpenStreetMap</li>
+                <li tabindex="0" data-used="GeoSim">Shapely</li>
+                <li tabindex="0" data-used="GeoSim">GeoJSON</li>
+                <li tabindex="0" data-used="Kuru Temizleme">MySQL</li>
+            </ul></div>
+            <div class="tool-row"><h3>Bulut ve DevOps</h3><ul>
+                <li tabindex="0" data-used="Kuru Temizleme">Docker</li>
+                <li tabindex="0" data-used="Kuru Temizleme">Kubernetes</li>
+                <li tabindex="0" data-used="Kuru Temizleme">GKE</li>
+                <li tabindex="0" data-used="Kuru Temizleme, GeoSim">GitHub Actions</li>
+                <li tabindex="0" data-used="Kuru Temizleme">Google Cloud</li>
+                <li tabindex="0">Git ve Linux</li>
+            </ul></div>
+            <div class="tool-row"><h3>Diller</h3><ul>
+                <li tabindex="0">Türkçe, ana dil</li><li tabindex="0">İngilizce, B1</li>
+            </ul></div>
         </div>
-        <div class="skill-group reveal">
-            <h3>Kütüphaneler ve çatılar</h3>
-            <ul><li>Pandas</li><li>NumPy</li><li>Scikit-learn</li><li>Matplotlib</li><li>Seaborn</li><li>Plotly</li><li>Streamlit</li><li>OpenCV</li><li>FastAPI</li><li>React</li></ul>
-        </div>
-        <div class="skill-group reveal">
-            <h3>Web, veritabanı ve coğrafi veri</h3>
-            <ul><li>REST API</li><li>MySQL</li><li>HTML ve CSS</li><li>GeoJSON</li><li>Shapely</li><li>Mapbox</li><li>deck.gl</li><li>OpenStreetMap</li></ul>
-        </div>
-        <div class="skill-group reveal">
-            <h3>Bulut ve DevOps</h3>
-            <ul><li>Docker</li><li>Docker Compose</li><li>Kubernetes</li><li>GKE</li><li>Google Cloud Platform</li><li>GitHub Actions</li><li>CI/CD</li></ul>
-        </div>
-        <div class="skill-group reveal">
-            <h3>Araçlar ve diller</h3>
-            <ul><li>Git ve GitHub</li><li>VS Code</li><li>Visual Studio</li><li>Google Colab</li><li>Linux</li><li>Türkçe (ana dil)</li><li>İngilizce (B1)</li></ul>
-        </div>
+        <p class="tool-readout" id="tool-readout" aria-live="polite">Bir araç seçin.</p>
     </div>
 </section>
 
 <!-- REFERENCES -->
-<section class="references" id="references" aria-labelledby="references-title">
-    <div class="section-head">
-        <h2 data-split id="references-title">Referanslar</h2>
-        <p>Beranet stajım sırasında birlikte çalıştığım yöneticiler. İletişim bilgileri talep üzerine paylaşılır.</p>
-    </div>
-    <div class="ref-list" data-scene>
-        <div class="ref" data-tilt>
-            <span class="ref-initials" aria-hidden="true">YA</span>
-            <div>
-                <h3>Yashar Anvarov</h3>
-                <p>Bilgisayar Mühendisi, Beranet Yazılım Müdürü</p>
-            </div>
-        </div>
-        <div class="ref" data-tilt>
-            <span class="ref-initials" aria-hidden="true">HA</span>
-            <div>
-                <h3>Harun Akkuş</h3>
-                <p>Yüksek Bilgisayar Mühendisi, Beranet Genel Müdürü</p>
-            </div>
-        </div>
+<section class="refs" aria-labelledby="refs-title">
+    <div class="wrap refs-grid">
+        <h2 id="refs-title" data-split>Referanslar</h2>
+        <div class="ref" data-tilt><p class="ref-name">Yashar Anvarov</p><p>Bilgisayar Mühendisi, Beranet Yazılım Müdürü</p></div>
+        <div class="ref" data-tilt><p class="ref-name">Harun Akkuş</p><p>Yüksek Bilgisayar Mühendisi, Beranet Genel Müdürü</p></div>
+        <p class="refs-note">Beranet stajım sırasında birlikte çalıştığım yöneticiler. İletişim bilgileri talep üzerine paylaşılır.</p>
     </div>
 </section>
 
 <!-- CONTACT -->
 <section class="contact" id="contact" aria-labelledby="contact-title">
-    <div class="contact-intro">
-        <h2 data-split id="contact-title">Birlikte çalışalım</h2>
-        <p>Staj, junior pozisyon ya da bir proje fikri için yazabilirsiniz. İstanbul'dayım, genellikle aynı gün dönüş yapıyorum.</p>
-        <a class="contact-mail" href="mailto:beycanelanur@gmail.com">beycanelanur@gmail.com</a>
-        <ul class="hero-links">
+    <div class="wrap">
+        <h2 id="contact-title" data-split>Birlikte çalışalım</h2>
+        <p class="contact-lead">Staj, junior pozisyon ya da bir proje fikri için yazın; genellikle aynı gün dönüyorum.</p>
+        <div class="mail-row">
+            <a class="mail" href="mailto:beycanelanur@gmail.com">beycanelanur@gmail.com</a>
+            <button class="btn btn-light" id="copy-mail" data-magnet>Adresi kopyala</button>
+        </div>
+        <p class="copy-status" id="copy-status" role="status"></p>
+        <ul class="contact-links">
             <li><a href="https://www.linkedin.com/in/elanurbeycan" target="_blank" rel="noopener">LinkedIn</a></li>
             <li><a href="https://github.com/elanur04" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="Elanur_Beycan_CV.pdf" target="_blank" rel="noopener">CV (PDF)</a></li>
         </ul>
     </div>
-
-    <form id="contact-form" class="contact-form" novalidate data-scene>
-        <div class="field">
-            <label for="f-name">Adınız</label>
-            <input id="f-name" type="text" name="name" autocomplete="name" required>
-        </div>
-        <div class="field">
-            <label for="f-email">E-posta adresiniz</label>
-            <input id="f-email" type="email" name="email" autocomplete="email" required>
-        </div>
-        <div class="field">
-            <label for="f-subject">Konu</label>
-            <input id="f-subject" type="text" name="subject" placeholder="Örneğin: Yaz stajı">
-        </div>
-        <div class="field">
-            <label for="f-message">Mesajınız</label>
-            <textarea id="f-message" name="message" rows="5" required></textarea>
-        </div>
-        <p class="form-note" id="form-note" role="status"></p>
-        <button type="submit" class="btn btn-primary" data-magnet>E-posta uygulamasında aç</button>
-    </form>
 </section>
 
 </main>
 
 <footer class="footer">
-    <p>Elanur Beycan, 2026. Bu site düz HTML, CSS ve JavaScript ile yazıldı.</p>
-    <a href="#home">Başa dön</a>
+    <p>Elanur Beycan, 2026. İstanbul.</p>
+    <a href="#top">Başa dön</a>
 </footer>
 
 <script src="script.js"></script>
