@@ -3,8 +3,42 @@
     const root = document.documentElement;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    /* ---------- Giriş animasyonu ---------- */
-    requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add('is-loaded')));
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const clamp = (v, a, b) => Math.min(Math.max(v, a), b);
+
+    /* ---------- Karşılama perdesi ve giriş animasyonu ---------- */
+    const intro = document.getElementById('intro');
+    let introResolve;
+    const introDone = new Promise(r => { introResolve = r; });
+    const finishIntro = () => {
+        if (intro) intro.classList.add('is-done');
+        setTimeout(() => { root.classList.add('is-loaded'); introResolve(); }, 350);
+    };
+    if (intro && !reduceMotion) {
+        const num = document.getElementById('intro-num');
+        const t0 = performance.now();
+        const DUR = 1100;
+        const tick = (now) => {
+            const k = clamp((now - t0) / DUR, 0, 1);
+            num.textContent = Math.round((1 - Math.pow(1 - k, 3)) * 100);
+            if (k < 1) requestAnimationFrame(tick); else setTimeout(finishIntro, 120);
+        };
+        requestAnimationFrame(tick);
+        intro.addEventListener('click', finishIntro, { once: true });
+    } else {
+        if (intro) intro.remove();
+        requestAnimationFrame(() => requestAnimationFrame(finishIntro));
+    }
+
+    /* ---------- Başlıkları kelimelere böl (3B açılış için) ---------- */
+    document.querySelectorAll('[data-split]').forEach(el => {
+        const words = el.textContent.trim().split(/\s+/);
+        el.setAttribute('aria-label', words.join(' '));
+        el.innerHTML = words.map((w, i) => `<span class="w" aria-hidden="true"><span style="--i:${i}">${w}</span></span>`).join(' ');
+    });
+    document.querySelectorAll('.skill-group li').forEach(li => {
+        li.style.setProperty('--i', [...li.parentElement.children].indexOf(li));
+    });
 
     /* ---------- Header: kaydırınca zemin ---------- */
     const header = document.querySelector('.header');
@@ -41,9 +75,10 @@
     sections.forEach(s => spy.observe(s));
 
     /* ---------- Kaydırınca beliren öğeler ---------- */
-    const reveals = document.querySelectorAll('.reveal');
+    const reveals = document.querySelectorAll('.reveal, [data-split], [data-scene]');
     // Aynı gruptaki kardeşlere küçük gecikme ver
     reveals.forEach(el => {
+        if (!el.classList.contains('reveal')) return;
         const siblings = [...el.parentElement.children].filter(c => c.classList.contains('reveal'));
         const i = siblings.indexOf(el);
         if (i > 0) el.style.setProperty('--d', Math.min(i * 0.08, 0.4) + 's');
@@ -78,6 +113,123 @@
     }, { passive: true });
     window.addEventListener('resize', updateTimeline);
     updateTimeline();
+
+    /* ---------- Hareket katmanı: paralaks, 3B sahneler, şerit, imleç ---------- */
+    if (!reduceMotion) {
+        const hero = document.querySelector('.hero');
+        const bar = document.querySelector('.scroll-progress span');
+        const scenes = [...document.querySelectorAll('[data-scene]')];
+        const track = document.querySelector('.ticker-track');
+        const cursor = document.querySelector('.cursor');
+
+        // Şeridi kesintisiz döngü için çoğalt
+        if (track) track.innerHTML += track.innerHTML;
+
+        let lastY = window.scrollY, velocity = 0, tx = 0, skew = 0;
+        let cx = -100, cy = -100, tcx = -100, tcy = -100;
+        let lastT = performance.now();
+
+        const frame = (now) => {
+            const dt = Math.min((now - lastT) / 1000, 0.05);
+            lastT = now;
+            const vh = window.innerHeight;
+            const y = window.scrollY;
+
+            // ilerleme çubuğu
+            const max = document.documentElement.scrollHeight - vh;
+            bar.style.setProperty('--sp', max > 0 ? (y / max).toFixed(4) : 0);
+
+            // hero paralaksı
+            hero.style.setProperty('--hp', clamp(y / (hero.offsetHeight * 0.9), 0, 1).toFixed(4));
+
+            // 3B sahneler
+            scenes.forEach(el => {
+                const top = el.getBoundingClientRect().top;
+                const e = clamp((top - vh * 0.2) / (vh * 0.8), 0, 1);
+                el.style.setProperty('--e', e.toFixed(4));
+            });
+
+            // şerit: kaydırma hızına tepki verir
+            const dy = y - lastY;
+            lastY = y;
+            velocity += (dy / Math.max(dt, 0.001) - velocity) * 0.12;
+            if (track) {
+                const half = track.scrollWidth / 2;
+                tx -= (60 + Math.abs(velocity) * 0.35) * dt;
+                if (tx <= -half) tx += half;
+                skew += (clamp(-velocity * 0.012, -12, 12) - skew) * 0.1;
+                track.style.setProperty('--tx', tx.toFixed(2) + 'px');
+                track.style.setProperty('--tk', skew.toFixed(2) + 'deg');
+            }
+
+            // imleç
+            if (cursor && finePointer) {
+                cx += (tcx - cx) * 0.2;
+                cy += (tcy - cy) * 0.2;
+                cursor.style.setProperty('--cx', cx.toFixed(1) + 'px');
+                cursor.style.setProperty('--cy', cy.toFixed(1) + 'px');
+            }
+            requestAnimationFrame(frame);
+        };
+        requestAnimationFrame(frame);
+
+        // hero: imleçle 3B eğim
+        hero.addEventListener('pointermove', (e) => {
+            const r = hero.getBoundingClientRect();
+            hero.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 2 - 1).toFixed(3));
+            hero.style.setProperty('--my', ((e.clientY - r.top) / r.height * 2 - 1).toFixed(3));
+        });
+        hero.addEventListener('pointerleave', () => {
+            hero.style.setProperty('--mx', 0);
+            hero.style.setProperty('--my', 0);
+        });
+
+        if (finePointer) {
+            // imleç takibi
+            window.addEventListener('pointermove', (e) => {
+                tcx = e.clientX; tcy = e.clientY;
+                cursor.classList.remove('is-hidden');
+            }, { passive: true });
+            document.addEventListener('pointerleave', () => cursor.classList.add('is-hidden'));
+            document.addEventListener('pointerover', (e) => {
+                const hot = e.target.closest('a, button, [data-tilt], .project, label, input, textarea, canvas');
+                cursor.classList.toggle('is-hover', !!hot);
+            });
+
+            // eğilebilen kartlar
+            document.querySelectorAll('[data-tilt]').forEach(el => {
+                el.addEventListener('pointermove', (e) => {
+                    const r = el.getBoundingClientRect();
+                    const x = (e.clientX - r.left) / r.width, yy = (e.clientY - r.top) / r.height;
+                    el.classList.add('is-tilting');
+                    el.style.setProperty('--rx', ((x - 0.5) * 14).toFixed(2) + 'deg');
+                    el.style.setProperty('--ry', ((0.5 - yy) * 14).toFixed(2) + 'deg');
+                    el.style.setProperty('--gx', (x * 100).toFixed(1) + '%');
+                    el.style.setProperty('--gy', (yy * 100).toFixed(1) + '%');
+                });
+                el.addEventListener('pointerleave', () => {
+                    el.classList.remove('is-tilting');
+                    el.style.setProperty('--rx', '0deg');
+                    el.style.setProperty('--ry', '0deg');
+                });
+            });
+
+            // mıknatıslı butonlar
+            document.querySelectorAll('[data-magnet]').forEach(el => {
+                el.addEventListener('pointermove', (e) => {
+                    const r = el.getBoundingClientRect();
+                    el.classList.add('is-pulling');
+                    el.style.setProperty('--bx', ((e.clientX - r.left - r.width / 2) * 0.3).toFixed(1) + 'px');
+                    el.style.setProperty('--by', ((e.clientY - r.top - r.height / 2) * 0.4).toFixed(1) + 'px');
+                });
+                el.addEventListener('pointerleave', () => {
+                    el.classList.remove('is-pulling');
+                    el.style.setProperty('--bx', '0px');
+                    el.style.setProperty('--by', '0px');
+                });
+            });
+        }
+    }
 
     /* ---------- İletişim formu (e-posta uygulamasını açar) ---------- */
     const form = document.getElementById('contact-form');
@@ -291,9 +443,10 @@
     });
     canvas.addEventListener('pointerleave', () => { pointer.active = false; });
 
-    let start = performance.now();
-    let last = start;
-    let nextDetect = start + 1800;
+    let start = Infinity;
+    let last = performance.now();
+    let nextDetect = Infinity;
+    introDone.then(() => { start = performance.now(); nextDetect = start + 1800; });
 
     const step = (now) => {
         const dt = Math.min((now - last) / 1000, 0.05);

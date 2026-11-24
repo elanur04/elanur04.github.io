@@ -18,6 +18,15 @@
 </head>
 <body>
 <a class="skip-link" href="#main">İçeriğe geç</a>
+<div class="intro" id="intro" aria-hidden="true">
+    <div class="intro-inner">
+        <svg class="intro-mark" viewBox="0 0 32 32"><path d="M16 3 29 10.5v11L16 29 3 21.5v-11z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3 10.5 16 18l13-7.5M16 18v11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        <p class="intro-name">Elanur Beycan</p>
+        <p class="intro-count"><span id="intro-num">0</span>%</p>
+    </div>
+</div>
+<div class="scroll-progress" aria-hidden="true"><span></span></div>
+<div class="cursor" aria-hidden="true"></div>
 
 <header class="header" id="top">
     <a href="#home" class="logo" aria-label="Elanur Beycan, ana sayfa">
@@ -32,7 +41,7 @@
         <a href="#journey">Eğitim ve deneyim</a>
         <a href="#skills">Yetenekler</a>
         <a href="#references">Referanslar</a>
-        <a href="#contact" class="nav-cta">İletişim</a>
+        <a href="#contact" class="nav-cta" data-magnet>İletişim</a>
     </nav>
 </header>
 
@@ -49,8 +58,8 @@
         <p class="hero-lead">Uydu görüntüsünden şehrin dijital ikizini, ham veriden tahmin modelini kuruyorum.</p>
         <p class="hero-sub">Bartın Üniversitesi'nde Bilgisayar Mühendisliği 4. sınıf öğrencisiyim. Python ile veri analizi, makine öğrenmesi, optimizasyon ve coğrafi veri işleme üzerine çalışıyor; projelerimi FastAPI, Docker, Kubernetes ve CI/CD ile ayağa kaldırıyorum.</p>
         <div class="hero-actions">
-            <a href="#projects" class="btn btn-primary">Projeleri gör</a>
-            <a href="Elanur_Beycan_CV.pdf" class="btn btn-ghost" target="_blank" rel="noopener">CV'yi aç (PDF)</a>
+            <a href="#projects" class="btn btn-primary" data-magnet>Projeleri gör</a>
+            <a href="Elanur_Beycan_CV.pdf" class="btn btn-ghost" data-magnet target="_blank" rel="noopener">CV'yi aç (PDF)</a>
         </div>
         <ul class="hero-links" aria-label="Bağlantılar">
             <li><a href="https://github.com/elanur04" target="_blank" rel="noopener">GitHub</a></li>
@@ -65,14 +74,20 @@
     </figure>
 </section>
 
+<div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+        <span>Python</span><i></i><span>FastAPI</span><i></i><span>Bilgisayarlı görü</span><i></i><span>OpenStreetMap</span><i></i><span>Scikit-learn</span><i></i><span>Kubernetes</span><i></i><span>Q-Learning</span><i></i><span>deck.gl</span><i></i><span>GitHub Actions</span><i></i><span>Veri analizi</span><i></i>
+    </div>
+</div>
+
 <!-- PROJECTS -->
 <section class="projects" id="projects" aria-labelledby="projects-title">
     <div class="section-head">
-        <h2 id="projects-title">Projeler</h2>
+        <h2 data-split id="projects-title">Projeler</h2>
         <p>Bitirme projesinden takım çalışmalarına; her birinde neyi benim yaptığımı ve sonucun ne olduğunu yazdım.</p>
     </div>
 
-    <article class="feature reveal">
+    <article class="feature" data-scene="strong">
         <div class="feature-body">
             <p class="tag">Bitirme projesi, Ağustos 2026'dan beri devam ediyor</p>
             <h3>GeoSim</h3>
@@ -94,7 +109,7 @@
         </ol>
     </article>
 
-    <div class="project-list">
+    <div class="project-list" data-scene>
         <article class="project reveal">
             <div class="project-meta">
                 <p class="tag">Bulut ve DevOps, Mayıs–Haziran 2026</p>
@@ -139,9 +154,9 @@
             <div class="project-detail">
                 <p>27.901 kayıtlık veri setinde keşifsel analiz, ön işleme ve öznitelik mühendisliği yaptım. SVM, Random Forest, KNN ve lojistik regresyonu karşılaştırdım; en iyi model Streamlit arayüzünde tahmin yapıyor.</p>
                 <dl class="metrics">
-                    <div><dt>Test doğruluğu (SVM)</dt><dd>%84</dd></div>
-                    <div><dt>ROC AUC (Random Forest)</dt><dd>0,91</dd></div>
-                    <div><dt>Test kaydı</dt><dd>5.581</dd></div>
+                    <div data-tilt><dt>Test doğruluğu (SVM)</dt><dd>%84</dd></div>
+                    <div data-tilt><dt>ROC AUC (Random Forest)</dt><dd>0,91</dd></div>
+                    <div data-tilt><dt>Test kaydı</dt><dd>5.581</dd></div>
                 </dl>
                 <p class="stack">Python, Scikit-learn, Pandas, NumPy, Matplotlib, Seaborn, Streamlit</p>
                 <a class="text-link" href="https://github.com/elanur04/student_depression" target="_blank" rel="noopener">GitHub'da incele</a>
@@ -153,9 +168,10 @@
 <!-- JOURNEY -->
 <section class="journey" id="journey" aria-labelledby="journey-title">
     <div class="section-head">
-        <h2 id="journey-title">Eğitim ve deneyim</h2>
+        <h2 data-split id="journey-title">Eğitim ve deneyim</h2>
     </div>
-    <ol class="timeline">
+    <ol class="timeline" data-scene>
+        <li class="comet" aria-hidden="true"></li>
         <li class="tl-item reveal">
             <time>Eylül 2023</time>
             <h3>Bartın Üniversitesi, Bilgisayar Mühendisliği</h3>
@@ -187,9 +203,9 @@
 <!-- SKILLS -->
 <section class="skills" id="skills" aria-labelledby="skills-title">
     <div class="section-head">
-        <h2 id="skills-title">Yetenekler</h2>
+        <h2 data-split id="skills-title">Yetenekler</h2>
     </div>
-    <div class="skill-groups">
+    <div class="skill-groups" data-scene>
         <div class="skill-group reveal">
             <h3>Programlama dilleri</h3>
             <ul><li>Python</li><li>SQL</li><li>JavaScript</li><li>Java</li><li>C#</li><li>PHP</li></ul>
@@ -220,18 +236,18 @@
 <!-- REFERENCES -->
 <section class="references" id="references" aria-labelledby="references-title">
     <div class="section-head">
-        <h2 id="references-title">Referanslar</h2>
+        <h2 data-split id="references-title">Referanslar</h2>
         <p>Beranet stajım sırasında birlikte çalıştığım yöneticiler. İletişim bilgileri talep üzerine paylaşılır.</p>
     </div>
-    <div class="ref-list">
-        <div class="ref reveal">
+    <div class="ref-list" data-scene>
+        <div class="ref" data-tilt>
             <span class="ref-initials" aria-hidden="true">YA</span>
             <div>
                 <h3>Yashar Anvarov</h3>
                 <p>Bilgisayar Mühendisi, Beranet Yazılım Müdürü</p>
             </div>
         </div>
-        <div class="ref reveal">
+        <div class="ref" data-tilt>
             <span class="ref-initials" aria-hidden="true">HA</span>
             <div>
                 <h3>Harun Akkuş</h3>
@@ -244,7 +260,7 @@
 <!-- CONTACT -->
 <section class="contact" id="contact" aria-labelledby="contact-title">
     <div class="contact-intro">
-        <h2 id="contact-title">Birlikte çalışalım</h2>
+        <h2 data-split id="contact-title">Birlikte çalışalım</h2>
         <p>Staj, junior pozisyon ya da bir proje fikri için yazabilirsiniz. İstanbul'dayım, genellikle aynı gün dönüş yapıyorum.</p>
         <a class="contact-mail" href="mailto:beycanelanur@gmail.com">beycanelanur@gmail.com</a>
         <ul class="hero-links">
@@ -253,7 +269,7 @@
         </ul>
     </div>
 
-    <form id="contact-form" class="contact-form" novalidate>
+    <form id="contact-form" class="contact-form" novalidate data-scene>
         <div class="field">
             <label for="f-name">Adınız</label>
             <input id="f-name" type="text" name="name" autocomplete="name" required>
@@ -271,7 +287,7 @@
             <textarea id="f-message" name="message" rows="5" required></textarea>
         </div>
         <p class="form-note" id="form-note" role="status"></p>
-        <button type="submit" class="btn btn-primary">E-posta uygulamasında aç</button>
+        <button type="submit" class="btn btn-primary" data-magnet>E-posta uygulamasında aç</button>
     </form>
 </section>
 

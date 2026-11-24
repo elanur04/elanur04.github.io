@@ -50,6 +50,7 @@ body {
 }
 
 img, svg, canvas { display: block; max-width: 100%; }
+main { overflow-x: clip; }
 a { color: inherit; }
 ul, ol { list-style: none; }
 
@@ -635,6 +636,218 @@ section {
 }
 .js .reveal.is-in { opacity: 1; transform: none; }
 
+/* ==========================================================
+   Hareket katmanı: karşılama, imleç, paralaks, 3B sahneler
+   ========================================================== */
+
+/* Karşılama perdesi */
+.intro { display: none; }
+.js .intro {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: grid;
+    place-items: center;
+    background: var(--ink);
+    color: var(--paper);
+    clip-path: inset(0 0 0 0);
+    transition: clip-path 1s cubic-bezier(.76, 0, .24, 1);
+}
+.js .intro.is-done { clip-path: inset(0 0 100% 0); pointer-events: none; }
+.intro-inner { display: grid; justify-items: center; gap: .8rem; }
+.intro-mark { width: 56px; height: 56px; color: #5fd0c8; animation: intro-spin 1.4s var(--ease-out) both; }
+@keyframes intro-spin { from { transform: rotate(-120deg) scale(.6); opacity: 0; } }
+.intro-name { font-family: var(--font-display); font-size: var(--step-2); font-weight: 700; letter-spacing: -0.02em; }
+.intro-count { font-size: var(--step--1); color: #9fb0c3; font-variant-numeric: tabular-nums; }
+.js .intro.is-done .intro-inner { transform: translateY(-40px); opacity: 0; transition: transform .8s var(--ease-out), opacity .5s; }
+
+/* Kaydırma ilerleme çubuğu */
+.scroll-progress {
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: 3px;
+    z-index: 60;
+    pointer-events: none;
+}
+.scroll-progress span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, var(--water), var(--road));
+    transform-origin: left;
+    transform: scaleX(var(--sp, 0));
+}
+
+/* Özel imleç (yalnızca fareli cihazlarda) */
+.cursor { display: none; }
+@media (hover: hover) and (pointer: fine) {
+    .js .cursor {
+        display: block;
+        position: fixed;
+        left: 0; top: 0;
+        z-index: 150;
+        width: 34px; height: 34px;
+        margin: -17px 0 0 -17px;
+        border: 1.5px solid var(--water);
+        border-radius: 50%;
+        pointer-events: none;
+        transform: translate3d(var(--cx, -100px), var(--cy, -100px), 0) scale(var(--cs, 1));
+        transition: width .3s var(--ease-out), height .3s var(--ease-out), margin .3s var(--ease-out), background-color .3s, border-color .3s, opacity .3s;
+    }
+    .js .cursor.is-hover {
+        width: 64px; height: 64px;
+        margin: -32px 0 0 -32px;
+        background: rgba(13, 117, 128, .12);
+        border-color: transparent;
+    }
+    .js .cursor.is-hidden { opacity: 0; }
+}
+
+/* Hero: çok katmanlı paralaks ve 3B eğim */
+.hero { perspective: 1400px; }
+.hero-text { transform: translate3d(0, calc(var(--hp, 0) * -90px), 0); opacity: calc(1 - var(--hp, 0) * 1.1); }
+.hero-visual {
+    transform-style: preserve-3d;
+    transform:
+        translate3d(0, calc(var(--hp, 0) * 60px), 0)
+        rotateX(calc(var(--hp, 0) * 38deg + var(--my, 0) * -5deg))
+        rotateY(calc(var(--mx, 0) * 7deg))
+        scale(calc(1 - var(--hp, 0) * .18));
+    transition: transform .2s linear;
+    will-change: transform;
+}
+.hero-visual figcaption { transform: translateZ(40px); }
+
+/* Teknoloji şeridi */
+.ticker {
+    overflow: hidden;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 1.1rem 0;
+    transform: rotate(-1.5deg) scale(1.02);
+    margin: 1rem 0 2rem;
+}
+.ticker-track {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    width: max-content;
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 1rem + 1.6vw, 2.4rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    transform: translate3d(var(--tx, 0), 0, 0) skewX(var(--tk, 0deg));
+    will-change: transform;
+}
+.ticker-track i {
+    width: .55em; height: .55em;
+    border: 2px solid #5fd0c8;
+    transform: rotate(45deg);
+    flex: none;
+}
+
+/* Başlıklar: kelime kelime 3B açılış */
+[data-split] .w {
+    display: inline-block;
+    perspective: 600px;
+    overflow: hidden;
+    padding-bottom: .08em;
+    vertical-align: bottom;
+}
+[data-split] .w > span { display: inline-block; transform-origin: 50% 100%; }
+.js [data-split] .w > span {
+    transform: translateY(70%) rotateX(-85deg);
+    opacity: 0;
+    transition: transform .9s var(--ease-out), opacity .6s;
+    transition-delay: calc(var(--i) * 70ms);
+}
+.js [data-split].is-in .w > span { transform: none; opacity: 1; }
+
+/* 3B sahneler: bölüm içeriği kaydırınca "sayfa çevirir" gibi düzleşir */
+[data-scene] {
+    transform-origin: 50% 0%;
+    transform:
+        perspective(1400px)
+        translate3d(0, calc(var(--e, 0) * 70px), 0)
+        rotateX(calc(var(--e, 0) * 16deg))
+        scale(calc(1 - var(--e, 0) * .05));
+    will-change: transform;
+}
+[data-scene="strong"] {
+    transform:
+        perspective(1200px)
+        translate3d(0, calc(var(--e, 0) * 90px), 0)
+        rotateX(calc(var(--e, 0) * 32deg))
+        scale(calc(1 - var(--e, 0) * .1));
+}
+
+@media (max-width: 860px) {
+    [data-scene="strong"] {
+        transform: perspective(1200px) translate3d(0, calc(var(--e, 0) * 60px), 0) rotateX(calc(var(--e, 0) * 18deg)) scale(calc(1 - var(--e, 0) * .12));
+    }
+}
+
+/* Proje satırları: alttan 3B dönerek gelir */
+.project-list { perspective: 1200px; }
+.js .project.reveal { transform: rotateX(-50deg) translateY(40px); transform-origin: 50% 0%; }
+.js .project.reveal.is-in { transform: none; }
+
+/* Zaman çizelgesi: ilerleme başındaki kuyruklu yıldız */
+.timeline .comet {
+    position: absolute;
+    left: 9px;
+    top: calc(6px + var(--progress, 0) * (100% - 12px));
+    width: 14px; height: 14px;
+    margin: -7px 0 0 -7px;
+    border-radius: 50%;
+    background: var(--road);
+    box-shadow: 0 0 0 5px rgba(227, 162, 58, .25), 0 0 22px 6px rgba(227, 162, 58, .55);
+    z-index: 2;
+    opacity: calc(var(--progress, 0) * 8);
+}
+.timeline .comet::after {
+    content: "";
+    position: absolute;
+    left: 50%; bottom: 50%;
+    width: 2px; height: 90px;
+    transform: translateX(-50%);
+    background: linear-gradient(to top, rgba(227, 162, 58, .8), transparent);
+}
+.js .tl-item.reveal { transform: perspective(900px) rotateY(-24deg) translateX(40px); transform-origin: 0 50%; }
+.js .tl-item.reveal.is-in { transform: none; }
+
+/* Yetenek çipleri: 3B çevrilerek sırayla belirir */
+.skill-group ul { perspective: 600px; }
+.js .skill-group li { transform: rotateY(90deg); opacity: 0; transition: transform .6s var(--ease-out), opacity .4s, border-color .2s, color .2s; transition-delay: calc(var(--i, 0) * 45ms); }
+.js .skill-group.is-in li { transform: none; opacity: 1; }
+.js .skill-group.is-in li:hover { transform: translateY(-3px); transition-delay: 0s; }
+
+/* Eğilebilen kartlar */
+[data-tilt] {
+    transform: perspective(900px) rotateX(var(--ry, 0deg)) rotateY(var(--rx, 0deg)) translateZ(0);
+    transition: transform .5s var(--ease-out), box-shadow .3s;
+    transform-style: preserve-3d;
+    position: relative;
+}
+[data-tilt].is-tilting { transition: transform .08s linear, box-shadow .3s; box-shadow: 0 24px 40px -24px rgba(20, 34, 51, .35); }
+[data-tilt]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, .7), transparent 55%);
+    opacity: 0;
+    transition: opacity .3s;
+}
+[data-tilt].is-tilting::after { opacity: .6; }
+
+/* Mıknatıslı butonlar */
+[data-magnet],
+.btn[data-magnet]:hover,
+.btn[data-magnet]:active { transform: translate3d(var(--bx, 0), var(--by, 0), 0); }
+[data-magnet].is-pulling { transition: transform .15s linear, background-color .2s, color .2s, box-shadow .25s; }
+
 /* ---------- Responsive ---------- */
 @media (max-width: 1020px) {
     .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 6.5rem; }
@@ -698,4 +911,7 @@ section {
     .js .reveal, .js .hero-status, .js .hero-lead, .js .hero-sub,
     .js .hero-actions, .js .hero-links, .js .hero-visual figcaption { opacity: 1; transform: none; }
     .js .hero-name .line > span { transform: none; }
+    .js .intro, .cursor { display: none !important; }
+    [data-scene], [data-scene="strong"], .hero-text, .hero-visual, .ticker-track, [data-tilt], [data-magnet] { transform: none !important; opacity: 1 !important; }
+    .js [data-split] .w > span, .js .skill-group li, .js .project.reveal, .js .tl-item.reveal { transform: none !important; opacity: 1 !important; }
 }
