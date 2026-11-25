@@ -36,19 +36,34 @@
 <main id="main">
 
 <!-- HERO -->
-<section class="hero wrap" id="top" aria-labelledby="hero-title">
-    <p class="status"><span class="dot" aria-hidden="true"></span>Staj ve junior pozisyonlara açık</p>
-    <h1 id="hero-title">Elanur Beycan</h1>
-    <p class="lead">Uydu görüntüsünden şehrin dijital ikizini, ham veriden tahmin modelini kuruyorum. Bartın Üniversitesi'nde Bilgisayar Mühendisliği 4. sınıf öğrencisiyim; yapay zekâ, veri bilimi ve backend alanında staj ya da junior pozisyon arıyorum.</p>
-    <div class="actions">
-        <a class="btn btn-dark" href="#work">İşleri gör</a>
-        <a class="btn btn-ghost" href="Elanur_Beycan_CV.pdf" target="_blank" rel="noopener">CV'yi aç</a>
+<section class="hero" id="top" aria-labelledby="hero-title">
+    <div class="hero-wash" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="hero-grid wrap">
+        <div class="hero-copy">
+            <p class="status"><span class="dot" aria-hidden="true"></span>Staj ve junior pozisyonlara açık</p>
+            <h1 id="hero-title" class="hero-name">Elanur Beycan</h1>
+            <p class="tagline">
+                <span class="sr-only">Veriyi haritaya, tahmin modeline ve çalışan servise dönüştürüyorum.</span>
+                <span aria-hidden="true">Veriyi <span class="rotator"><span class="rot is-on" style="--c:#c2410c">haritaya</span><span class="rot" style="--c:#0f766e">tahmin modeline</span><span class="rot" style="--c:#4338ca">çalışan servise</span></span><br>dönüştürüyorum.</span>
+            </p>
+            <p class="lead">Bartın Üniversitesi'nde Bilgisayar Mühendisliği 4. sınıf öğrencisiyim. Yapay zekâ, veri bilimi ve backend alanında staj ya da junior pozisyon arıyorum.</p>
+            <div class="actions">
+                <a class="btn btn-dark" href="#work">İşleri gör</a>
+                <a class="btn btn-ghost" href="Elanur_Beycan_CV.pdf" target="_blank" rel="noopener">CV'yi aç</a>
+            </div>
+            <a class="now" href="#work">
+                <span class="now-label">Şu an üzerinde çalıştığım</span>
+                <span class="now-title">GeoSim: uydu görüntüsünden dijital ikiz ve trafik simülasyonu</span>
+            </a>
+        </div>
+        <figure class="hero-art">
+            <div class="art-card">
+                <canvas id="scan" aria-hidden="true"></canvas>
+                <span class="art-badge" aria-hidden="true"><i></i>canlı segmentasyon</span>
+            </div>
+            <figcaption>Veri noktaları bir haritaya dönüşüyor, her bina kendi rengiyle tespit ediliyor. İmleci haritada gezdirin.</figcaption>
+        </figure>
     </div>
-
-    <figure class="demo">
-        <canvas id="scan" aria-hidden="true"></canvas>
-        <figcaption>Uydu görüntüsü üzerinde bina tespiti, GeoSim projesinden esinlenen canlı bir çizim.</figcaption>
-    </figure>
 </section>
 
 <!-- WORK -->
