@@ -16,7 +16,7 @@ body { min-height: 100vh; display: grid; place-items: center; padding: 2rem; fon
 .hero-art { position: relative; }
 .art-card {
     position: relative; border-radius: 24px; overflow: hidden;
-    background: #0f2b25;
+    background: #10162d;
     box-shadow: 0 40px 80px -40px rgba(15, 43, 37, .55), 0 0 0 1px rgba(15, 43, 37, .08);
     transform: perspective(1200px) rotateY(calc(var(--mx, 0) * -6deg)) rotateX(calc(var(--my, 0) * 5deg));
     transition: transform .4s var(--ease);
@@ -24,7 +24,7 @@ body { min-height: 100vh; display: grid; place-items: center; padding: 2rem; fon
 .art-card canvas { width: 100%; aspect-ratio: 1 / 1; cursor: crosshair; }
 .art-badge {
     position: absolute; right: 14px; bottom: 14px; display: inline-flex; align-items: center; gap: .45rem;
-    padding: .3rem .7rem; border-radius: 999px; font-size: .78rem; font-weight: 500; color: #e9fff5;
+    padding: .3rem .7rem; border-radius: 999px; font-size: .78rem; font-weight: 500; color: #edf5ff;
     background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .18); backdrop-filter: blur(6px);
 }
 .art-badge i { width: 7px; height: 7px; border-radius: 50%; background: #ff6b6b; animation: blink 1.4s infinite; }
@@ -35,12 +35,12 @@ body { min-height: 100vh; display: grid; place-items: center; padding: 2rem; fon
     *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
 /* Fit the supplied animation inside the portfolio project panel. */
-body { min-height:100vh; padding:16px; background:#f5f6f3; }
+body { min-height:100vh; padding:16px; background:#151c36; }
 .hero-art { width:100%; }
 .art-card { border-radius:24px; }
 .art-card canvas { display:block; }
-.hero-art figcaption { color:#5f6663; font-size:14px; line-height:1.6; }
-.animation-toggle{position:absolute;top:12px;right:12px;z-index:3;border:1px solid #ffffff50;background:#0f2b25dd;color:#e9fff5;border-radius:20px;padding:7px 12px;font:500 12px system-ui;cursor:pointer}.animation-toggle:focus-visible{outline:3px solid #ffc857;outline-offset:3px}</style>
+.hero-art figcaption { color:#b9c5e4; font-size:14px; line-height:1.6; }
+.animation-toggle{position:absolute;top:12px;right:12px;z-index:3;border:1px solid #ffffff50;background:#10162ddd;color:#edf5ff;border-radius:20px;padding:7px 12px;font:500 12px system-ui;cursor:pointer}.animation-toggle:focus-visible{outline:3px solid #ffc857;outline-offset:3px}.art-card{box-shadow:0 20px 60px -20px #04091dcc,0 0 0 1px #8faaff20}.art-badge{background:#253655bb;border-color:#b0c7ff40}.art-badge i{background:#38e8db}.animation-toggle{background:#15213de6;border-color:#aecaff55}.animation-toggle:hover{background:#30446c}</style>
 </head>
 <body>
 
@@ -68,8 +68,8 @@ body { min-height:100vh; padding:16px; background:#f5f6f3; }
     if (!canvas || !canvas.getContext) return;
     const ctx = canvas.getContext('2d');
     const card = $('.art-card');
-    const PAL = ['#ff8a65', '#ffc857', '#4fd1c5', '#7aa2ff', '#c4a1ff', '#6ee7a0', '#ff6b8b'];
-    const BG = '#0f2b25', ROAD = '#17392f', LANE = 'rgba(190,240,220,.14)';
+    const PAL = ['#ff817a', '#ffce63', '#38e8db', '#6fa4ff', '#bd8cff', '#64edb4', '#ff77c9'];
+    const BG = '#10162d', ROAD = '#202d4c', LANE = 'rgba(164,195,255,.32)';
     let seed = 5;
     const rnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
     const hexA = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; };
@@ -115,7 +115,7 @@ body { min-height:100vh; padding:16px; background:#f5f6f3; }
                 pts.push({ tx, ty, sx: S / 2 + Math.cos(a) * rr, sy: S / 2 + Math.sin(a) * rr, col: b.col, ph: rnd() * Math.PI * 2, x: 0, y: 0, ox: 0, oy: 0 });
             }
         });
-        roads.forEach(r => { for (let k = 0; k < 2; k++) cars.push({ r, t: rnd(), v: (.05 + rnd() * .06) * (rnd() < .5 ? -1 : 1), col: PAL[Math.floor(rnd() * PAL.length)] }); });
+        roads.forEach(r => { for (let k = 0; k < 4; k++) cars.push({ r, t: rnd(), v: (.07 + rnd() * .08) * (rnd() < .5 ? -1 : 1), col: PAL[Math.floor(rnd() * PAL.length)] }); });
     };
 
     const resize = () => {
@@ -146,7 +146,11 @@ body { min-height:100vh; padding:16px; background:#f5f6f3; }
     const CYCLE = 10400;
     function draw(t, dt) {
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        ctx.fillStyle = BG; ctx.fillRect(0, 0, S, S);
+        const background = ctx.createRadialGradient(S*.45,S*.4,0,S*.5,S*.5,S*.8);
+        background.addColorStop(0,'#23345a'); background.addColorStop(.6,'#15213d'); background.addColorStop(1,'#0c1229');
+        ctx.fillStyle = background; ctx.fillRect(0,0,S,S);
+        ctx.strokeStyle='rgba(134,166,235,.055)';ctx.lineWidth=.6;ctx.beginPath();
+        for(let g=0;g<S;g+=S/24){ctx.moveTo(g,0);ctx.lineTo(g,S);ctx.moveTo(0,g);ctx.lineTo(S,g);}ctx.stroke();
 
         const gather = ease(Math.min(Math.max((t - 1400) / 1800, 0), 1)) * (1 - ease(Math.min(Math.max((t - 9000) / 1400, 0), 1)));
         const mapA = Math.min(Math.max((t - 2400) / 900, 0), 1) * (1 - Math.min(Math.max((t - 8600) / 700, 0), 1));
@@ -162,6 +166,14 @@ body { min-height:100vh; padding:16px; background:#f5f6f3; }
             ctx.globalAlpha = 1;
         }
 
+        // A soft scan sweep follows the progressive segmentation reveal.
+        if(mapA>0){
+            const sy=((t-2400)/6200)*S;
+            const scan=ctx.createLinearGradient(0,sy-S*.13,0,sy);
+            scan.addColorStop(0,'rgba(75,220,255,0)');scan.addColorStop(1,'rgba(75,220,255,.11)');
+            ctx.fillStyle=scan;ctx.fillRect(0,sy-S*.13,S,S*.13);
+            ctx.strokeStyle='rgba(113,232,255,.35)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,sy);ctx.lineTo(S,sy);ctx.stroke();
+        }
         // bina maskeleri: köşegen sırayla dolar
         let hot = null, hd = 1e9;
         blds.forEach(b => {
@@ -176,10 +188,11 @@ body { min-height:100vh; padding:16px; background:#f5f6f3; }
             if (a <= 0.01) return;
             const pop = 1 + (1 - k) * .15 * (k > 0 ? 1 : 0);
             const cx = b.x + b.w / 2, cy = b.y + b.h / 2, w = b.w * pop, h = b.h * pop;
-            ctx.fillStyle = hexA(b.col, (.28 + .25 * b.hov) * a);
+            ctx.fillStyle = hexA(b.col, (.38 + .22 * b.hov) * a);
             ctx.fillRect(cx - w / 2, cy - h / 2, w, h);
             ctx.strokeStyle = hexA(b.col, .95 * a); ctx.lineWidth = 1.6 + b.hov;
-            ctx.strokeRect(cx - w / 2, cy - h / 2, w, h);
+            ctx.shadowColor=b.col; ctx.shadowBlur=8 + b.hov*10;
+            ctx.strokeRect(cx - w / 2, cy - h / 2, w, h); ctx.shadowBlur=0;
         });
         // etiketler (büyük binalar ve imlecin altındaki)
         ctx.font = '600 10.5px Geist, system-ui, sans-serif';
@@ -190,7 +203,7 @@ body { min-height:100vh; padding:16px; background:#f5f6f3; }
             const txt = 'bina ' + b.conf, w = ctx.measureText(txt).width + 10;
             ctx.globalAlpha = show;
             ctx.fillStyle = b.col; ctx.fillRect(b.x, b.y - 2, w, 16);
-            ctx.fillStyle = '#0b1f1a'; ctx.fillText(txt, b.x + 5, b.y + 9.5);
+            ctx.fillStyle = '#11172e'; ctx.fillText(txt, b.x + 5, b.y + 9.5);
             ctx.globalAlpha = 1;
         });
 
@@ -201,8 +214,13 @@ body { min-height:100vh; padding:16px; background:#f5f6f3; }
                 const off = c.v > 0 ? c.r.w * .22 : -c.r.w * .22;
                 const x = c.r.v ? c.r.p + off : c.t * S, y = c.r.v ? c.t * S : c.r.p + off;
                 ctx.globalAlpha = mapA;
-                ctx.fillStyle = hexA(c.col, .25); ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = c.col; ctx.beginPath(); ctx.arc(x, y, 2.8, 0, Math.PI * 2); ctx.fill();
+                for(let tail=1;tail<=5;tail++){
+                    const behind=(c.t-Math.sign(c.v)*tail*.006+1)%1;
+                    const tx=c.r.v?x:behind*S, ty=c.r.v?behind*S:y;
+                    ctx.fillStyle=hexA(c.col,.24*(1-tail/6));ctx.beginPath();ctx.arc(tx,ty,3-tail*.25,0,Math.PI*2);ctx.fill();
+                }
+                ctx.fillStyle = hexA(c.col, .18); ctx.beginPath(); ctx.arc(x, y, 9, 0, Math.PI * 2); ctx.fill();
+                ctx.shadowColor=c.col;ctx.shadowBlur=11;ctx.fillStyle = c.col; ctx.beginPath(); ctx.arc(x, y, 3.1, 0, Math.PI * 2); ctx.fill();ctx.shadowBlur=0;
                 ctx.globalAlpha = 1;
             });
         }
@@ -220,7 +238,7 @@ body { min-height:100vh; padding:16px; background:#f5f6f3; }
                     else { p.ox *= .9; p.oy *= .9; }
                 } else { p.ox *= .9; p.oy *= .9; }
                 ctx.fillStyle = hexA(p.col, Math.min(ptsA, 1) * .9);
-                ctx.beginPath(); ctx.arc(x + p.ox, y + p.oy, 1.8, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(x + p.ox, y + p.oy, 2.1, 0, Math.PI * 2); ctx.fill();
             });
         }
     }

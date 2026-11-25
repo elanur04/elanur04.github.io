@@ -65,3 +65,6 @@ html{scroll-padding-top:88px}.container{width:calc(100% - 40px)}.site-header{hei
 .segmentation-visual{aspect-ratio:.91;min-height:0;background:#f5f6f3}
 @media(max-width:900px){.segmentation-visual{aspect-ratio:.82}}
 @media(max-width:680px){.segmentation-visual{aspect-ratio:.82;min-height:0}}
+
+/* Vivid midnight palette for the segmentation exhibit. */
+.segmentation-visual{background:#151c36}
