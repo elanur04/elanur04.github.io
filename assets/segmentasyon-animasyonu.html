@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canlı segmentasyon animasyonu</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Sayfa iskeleti (sadece bu örnek için) */
+:root { --muted: #5f6663; --ease: cubic-bezier(.2, .8, .2, 1); }
+* { box-sizing: border-box; margin: 0; }
+body { min-height: 100vh; display: grid; place-items: center; padding: 2rem; font-family: "Geist", system-ui, sans-serif; background: #f6f7f6; }
+.hero-art { width: min(520px, 100%); }
+
+/* Animasyon kartı */
+.hero-art { position: relative; }
+.art-card {
+    position: relative; border-radius: 24px; overflow: hidden;
+    background: #0f2b25;
+    box-shadow: 0 40px 80px -40px rgba(15, 43, 37, .55), 0 0 0 1px rgba(15, 43, 37, .08);
+    transform: perspective(1200px) rotateY(calc(var(--mx, 0) * -6deg)) rotateX(calc(var(--my, 0) * 5deg));
+    transition: transform .4s var(--ease);
+}
+.art-card canvas { width: 100%; aspect-ratio: 1 / 1; cursor: crosshair; }
+.art-badge {
+    position: absolute; right: 14px; bottom: 14px; display: inline-flex; align-items: center; gap: .45rem;
+    padding: .3rem .7rem; border-radius: 999px; font-size: .78rem; font-weight: 500; color: #e9fff5;
+    background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .18); backdrop-filter: blur(6px);
+}
+.art-badge i { width: 7px; height: 7px; border-radius: 50%; background: #ff6b6b; animation: blink 1.4s infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.hero-art figcaption { margin-top: .8rem; font-size: .84rem; color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+/* Fit the supplied animation inside the portfolio project panel. */
+body { min-height:100vh; padding:20px; background:#0f2b25; }
+.hero-art { width:min(520px, 100%, calc(100vh - 90px)); }
+.art-card { border-radius:14px; }
+.art-card canvas { display:block; }
+.hero-art figcaption { color:#b4c8bc; font-size:12px; line-height:1.6; }
+</style>
+</head>
+<body>
+
+<figure class="hero-art">
+    <div class="art-card">
+        <canvas id="scan" aria-hidden="true"></canvas>
+        <span class="art-badge" aria-hidden="true"><i></i>temsili segmentasyon</span>
+    </div>
+    <figcaption>Veri noktaları bir haritaya dönüşüyor, her bina kendi rengiyle tespit ediliyor. İmleci haritada gezdirin.</figcaption>
+</figure>
+
+<script>
+(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const $ = (s, el = document) => el.querySelector(s);
+
+    /* ======================================================
+       Hero görseli: veri noktalarından kurulan harita.
+       Noktalar binaların sınırlarına toplanır, her bina kendi
+       rengiyle maskelenir, araçlar yollarda akar, sonra noktalar
+       yeniden dağılır.
+       ====================================================== */
+    const canvas = $('#scan');
+    if (!canvas || !canvas.getContext) return;
+    const ctx = canvas.getContext('2d');
+    const card = $('.art-card');
+    const PAL = ['#ff8a65', '#ffc857', '#4fd1c5', '#7aa2ff', '#c4a1ff', '#6ee7a0', '#ff6b8b'];
+    const BG = '#0f2b25', ROAD = '#17392f', LANE = 'rgba(190,240,220,.14)';
+    let seed = 5;
+    const rnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+    const hexA = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; };
+    const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+    let S = 0, dpr = 1, roads = [], blds = [], pts = [], cars = [];
+    const build = () => {
+        seed = 5; roads = []; blds = []; pts = []; cars = [];
+        const step = S / 4.2, rw = S * 0.035;
+        const lines = [];
+        for (let k = 1; k < 4.2; k++) lines.push(k * step + (rnd() - .5) * step * .25);
+        lines.forEach(p => { roads.push({ v: true, p, w: rw }); roads.push({ v: false, p: p + (rnd() - .5) * step * .3, w: rw }); });
+        const xs = [0, ...roads.filter(r => r.v).map(r => r.p).sort((a, b) => a - b), S];
+        const ys = [0, ...roads.filter(r => !r.v).map(r => r.p).sort((a, b) => a - b), S];
+        let ci = 0;
+        for (let i = 0; i < xs.length - 1; i++) for (let j = 0; j < ys.length - 1; j++) {
+            const x0 = xs[i] + (i ? rw / 2 : 0) + S * .012, x1 = xs[i + 1] - (i < xs.length - 2 ? rw / 2 : 0) - S * .012;
+            const y0 = ys[j] + (j ? rw / 2 : 0) + S * .012, y1 = ys[j + 1] - (j < ys.length - 2 ? rw / 2 : 0) - S * .012;
+            const cols = 1 + Math.floor(rnd() * 2), rows = 1 + Math.floor(rnd() * 2);
+            const cw = (x1 - x0) / cols, rh = (y1 - y0) / rows;
+            for (let c = 0; c < cols; c++) for (let r = 0; r < rows; r++) {
+                if (rnd() < .14) continue;
+                const m = S * (.008 + rnd() * .012);
+                const b = { x: x0 + c * cw + m, y: y0 + r * rh + m, w: cw - 2 * m - rnd() * cw * .2, h: rh - 2 * m - rnd() * rh * .2 };
+                if (b.w < S * .04 || b.h < S * .04) continue;
+                b.col = PAL[ci++ % PAL.length];
+                b.conf = (0.86 + rnd() * 0.12).toFixed(2);
+                b.order = (b.x + b.y) / (2 * S);
+                b.hov = 0;
+                blds.push(b);
+            }
+        }
+        // her binanın çevresine nokta yerleştir
+        blds.forEach(b => {
+            const per = 2 * (b.w + b.h), n = Math.max(8, Math.round(per / (S * .022)));
+            for (let k = 0; k < n; k++) {
+                let d = (k / n) * per, tx, ty;
+                if (d < b.w) { tx = b.x + d; ty = b.y; }
+                else if ((d -= b.w) < b.h) { tx = b.x + b.w; ty = b.y + d; }
+                else if ((d -= b.h) < b.w) { tx = b.x + b.w - d; ty = b.y + b.h; }
+                else { d -= b.w; tx = b.x; ty = b.y + b.h - d; }
+                const a = rnd() * Math.PI * 2, rr = S * (.25 + rnd() * .55);
+                pts.push({ tx, ty, sx: S / 2 + Math.cos(a) * rr, sy: S / 2 + Math.sin(a) * rr, col: b.col, ph: rnd() * Math.PI * 2, x: 0, y: 0, ox: 0, oy: 0 });
+            }
+        });
+        roads.forEach(r => { for (let k = 0; k < 2; k++) cars.push({ r, t: rnd(), v: (.05 + rnd() * .06) * (rnd() < .5 ? -1 : 1), col: PAL[Math.floor(rnd() * PAL.length)] }); });
+    };
+
+    const resize = () => {
+        const r = canvas.getBoundingClientRect();
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        S = r.width;
+        canvas.width = Math.round(S * dpr); canvas.height = Math.round(S * dpr);
+        build();
+        if (reduce) draw(5200, 0);
+    };
+
+    const ptr = { x: -999, y: -999, on: false };
+    const setPtr = e => { const r = canvas.getBoundingClientRect(); ptr.x = e.clientX - r.left; ptr.y = e.clientY - r.top; ptr.on = true; };
+    canvas.addEventListener('pointermove', setPtr);
+    canvas.addEventListener('pointerdown', setPtr);
+    canvas.addEventListener('pointerleave', () => { ptr.on = false; });
+    if (!fine) { const cap = $('.hero-art figcaption'); if (cap) cap.textContent = 'Veri noktaları bir haritaya dönüşüyor, her bina kendi rengiyle tespit ediliyor. Haritaya dokunarak binaları inceleyin.'; }
+    if (fine && !reduce) {
+        card.addEventListener('pointermove', e => {
+            const r = card.getBoundingClientRect();
+            card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 2 - 1).toFixed(3));
+            card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 2 - 1).toFixed(3));
+        });
+        card.addEventListener('pointerleave', () => { card.style.setProperty('--mx', 0); card.style.setProperty('--my', 0); });
+    }
+
+    // Döngü: 0–1.4 sn dağınık, 1.4–3.2 toplanma, 3.2–4.6 maskeler, 4.6–9 bekleme, 9–10.4 dağılma
+    const CYCLE = 10400;
+    function draw(t, dt) {
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.fillStyle = BG; ctx.fillRect(0, 0, S, S);
+
+        const gather = ease(Math.min(Math.max((t - 1400) / 1800, 0), 1)) * (1 - ease(Math.min(Math.max((t - 9000) / 1400, 0), 1)));
+        const mapA = Math.min(Math.max((t - 2400) / 900, 0), 1) * (1 - Math.min(Math.max((t - 8600) / 700, 0), 1));
+
+        // yollar
+        if (mapA > 0) {
+            ctx.globalAlpha = mapA;
+            ctx.fillStyle = ROAD;
+            roads.forEach(r => r.v ? ctx.fillRect(r.p - r.w / 2, 0, r.w, S) : ctx.fillRect(0, r.p - r.w / 2, S, r.w));
+            ctx.strokeStyle = LANE; ctx.setLineDash([6, 8]); ctx.lineWidth = 1; ctx.beginPath();
+            roads.forEach(r => { if (r.v) { ctx.moveTo(r.p, 0); ctx.lineTo(r.p, S); } else { ctx.moveTo(0, r.p); ctx.lineTo(S, r.p); } });
+            ctx.stroke(); ctx.setLineDash([]);
+            ctx.globalAlpha = 1;
+        }
+
+        // bina maskeleri: köşegen sırayla dolar
+        let hot = null, hd = 1e9;
+        blds.forEach(b => {
+            const k = Math.min(Math.max((t - 3200 - b.order * 1400) / 450, 0), 1) * (1 - Math.min(Math.max((t - 8600) / 600, 0), 1));
+            if (ptr.on) {
+                const inside = ptr.x > b.x - 6 && ptr.x < b.x + b.w + 6 && ptr.y > b.y - 6 && ptr.y < b.y + b.h + 6;
+                const d = Math.hypot(ptr.x - (b.x + b.w / 2), ptr.y - (b.y + b.h / 2));
+                if (inside && d < hd) { hd = d; hot = b; }
+            }
+            b.hov += ((hot === b ? 1 : 0) - b.hov) * .2;
+            const a = Math.max(k, b.hov * mapA);
+            if (a <= 0.01) return;
+            const pop = 1 + (1 - k) * .15 * (k > 0 ? 1 : 0);
+            const cx = b.x + b.w / 2, cy = b.y + b.h / 2, w = b.w * pop, h = b.h * pop;
+            ctx.fillStyle = hexA(b.col, (.28 + .25 * b.hov) * a);
+            ctx.fillRect(cx - w / 2, cy - h / 2, w, h);
+            ctx.strokeStyle = hexA(b.col, .95 * a); ctx.lineWidth = 1.6 + b.hov;
+            ctx.strokeRect(cx - w / 2, cy - h / 2, w, h);
+        });
+        // etiketler (büyük binalar ve imlecin altındaki)
+        ctx.font = '600 10.5px Geist, system-ui, sans-serif';
+        blds.forEach(b => {
+            const k = Math.min(Math.max((t - 3600 - b.order * 1400) / 400, 0), 1) * (1 - Math.min(Math.max((t - 8600) / 600, 0), 1));
+            const show = Math.max(b.w * b.h > S * S * .012 ? k : 0, b.hov * mapA);
+            if (show < .02) return;
+            const txt = 'bina ' + b.conf, w = ctx.measureText(txt).width + 10;
+            ctx.globalAlpha = show;
+            ctx.fillStyle = b.col; ctx.fillRect(b.x, b.y - 2, w, 16);
+            ctx.fillStyle = '#0b1f1a'; ctx.fillText(txt, b.x + 5, b.y + 9.5);
+            ctx.globalAlpha = 1;
+        });
+
+        // araçlar
+        if (mapA > 0) {
+            cars.forEach(c => {
+                c.t = (c.t + c.v * dt / 1000 + 1) % 1;
+                const off = c.v > 0 ? c.r.w * .22 : -c.r.w * .22;
+                const x = c.r.v ? c.r.p + off : c.t * S, y = c.r.v ? c.t * S : c.r.p + off;
+                ctx.globalAlpha = mapA;
+                ctx.fillStyle = hexA(c.col, .25); ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = c.col; ctx.beginPath(); ctx.arc(x, y, 2.8, 0, Math.PI * 2); ctx.fill();
+                ctx.globalAlpha = 1;
+            });
+        }
+
+        // veri noktaları
+        const ptsA = 1 - Math.min(Math.max((t - 3000) / 900, 0), 1) + Math.min(Math.max((t - 8700) / 500, 0), 1);
+        if (ptsA > 0.01) {
+            pts.forEach(p => {
+                const wob = (1 - gather) * S * .02;
+                let x = p.sx + (p.tx - p.sx) * gather + Math.cos(t / 900 + p.ph) * wob;
+                let y = p.sy + (p.ty - p.sy) * gather + Math.sin(t / 1100 + p.ph) * wob;
+                if (ptr.on) {
+                    const dx = x - ptr.x, dy = y - ptr.y, d = Math.hypot(dx, dy), R = S * .14;
+                    if (d < R) { const f = (1 - d / R) * S * .05; p.ox += (dx / (d || 1) * f - p.ox) * .2; p.oy += (dy / (d || 1) * f - p.oy) * .2; }
+                    else { p.ox *= .9; p.oy *= .9; }
+                } else { p.ox *= .9; p.oy *= .9; }
+                ctx.fillStyle = hexA(p.col, Math.min(ptsA, 1) * .9);
+                ctx.beginPath(); ctx.arc(x + p.ox, y + p.oy, 1.8, 0, Math.PI * 2); ctx.fill();
+            });
+        }
+    }
+
+    new ResizeObserver(resize).observe(canvas);
+    resize();
+    if (reduce) return;
+    let running = false, raf = 0, last = 0, t0 = performance.now();
+    const loop = now => {
+        const dt = Math.min(now - last, 50); last = now;
+        draw((now - t0) % CYCLE, dt);
+        if (running) raf = requestAnimationFrame(loop);
+    };
+    new IntersectionObserver(([e]) => {
+        if (e.isIntersecting && !running) { running = true; last = performance.now(); raf = requestAnimationFrame(loop); }
+        else if (!e.isIntersecting && running) { running = false; cancelAnimationFrame(raf); }
+    }).observe(canvas);
+})();
+</script>
+</body>
+</html>
