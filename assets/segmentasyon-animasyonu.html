@@ -35,18 +35,18 @@ body { min-height: 100vh; display: grid; place-items: center; padding: 2rem; fon
     *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
 /* Fit the supplied animation inside the portfolio project panel. */
-body { min-height:100vh; padding:20px; background:#0f2b25; }
-.hero-art { width:min(520px, 100%, calc(100vh - 90px)); }
-.art-card { border-radius:14px; }
+body { min-height:100vh; padding:16px; background:#f5f6f3; }
+.hero-art { width:100%; }
+.art-card { border-radius:24px; }
 .art-card canvas { display:block; }
-.hero-art figcaption { color:#b4c8bc; font-size:12px; line-height:1.6; }
-</style>
+.hero-art figcaption { color:#5f6663; font-size:14px; line-height:1.6; }
+.animation-toggle{position:absolute;top:12px;right:12px;z-index:3;border:1px solid #ffffff50;background:#0f2b25dd;color:#e9fff5;border-radius:20px;padding:7px 12px;font:500 12px system-ui;cursor:pointer}.animation-toggle:focus-visible{outline:3px solid #ffc857;outline-offset:3px}</style>
 </head>
 <body>
 
 <figure class="hero-art">
     <div class="art-card">
-        <canvas id="scan" aria-hidden="true"></canvas>
+        <button class="animation-toggle" type="button">Duraklat</button><canvas id="scan" aria-hidden="true"></canvas>
         <span class="art-badge" aria-hidden="true"><i></i>temsili segmentasyon</span>
     </div>
     <figcaption>Veri noktaları bir haritaya dönüşüyor, her bina kendi rengiyle tespit ediliyor. İmleci haritada gezdirin.</figcaption>
@@ -227,17 +227,25 @@ body { min-height:100vh; padding:20px; background:#0f2b25; }
 
     new ResizeObserver(resize).observe(canvas);
     resize();
-    if (reduce) return;
-    let running = false, raf = 0, last = 0, t0 = performance.now();
+    let running = false, raf = 0, last = 0, elapsed = 0, visible = false, paused = reduce;
+    const toggle = document.querySelector('.animation-toggle');
+    function updateButton(){ toggle.textContent = paused ? 'Oynat' : 'Duraklat'; toggle.setAttribute('aria-pressed',String(paused)); }
     const loop = now => {
-        const dt = Math.min(now - last, 50); last = now;
-        draw((now - t0) % CYCLE, dt);
-        if (running) raf = requestAnimationFrame(loop);
+        if(!running)return;
+        const dt = Math.min(now - last, 50); last = now; elapsed += dt;
+        draw(elapsed % CYCLE, dt);
+        raf = requestAnimationFrame(loop);
     };
-    new IntersectionObserver(([e]) => {
-        if (e.isIntersecting && !running) { running = true; last = performance.now(); raf = requestAnimationFrame(loop); }
-        else if (!e.isIntersecting && running) { running = false; cancelAnimationFrame(raf); }
-    }).observe(canvas);
+    function sync(){
+        const next = visible && !paused && !document.hidden;
+        if(next && !running){running=true;last=performance.now();raf=requestAnimationFrame(loop);}
+        else if(!next){running=false;cancelAnimationFrame(raf);}
+    }
+    toggle.addEventListener('click',()=>{paused=!paused;updateButton();sync();});
+    new IntersectionObserver(([e])=>{visible=e.isIntersecting;sync();}).observe(canvas);
+    document.addEventListener('visibilitychange',sync);
+    updateButton();
+
 })();
 </script>
 </body>
