@@ -77,3 +77,7 @@ html{scroll-padding-top:88px}.container{width:calc(100% - 40px)}.site-header{hei
 /* Larger, clearer introduction paragraphs. */
 .hero .hero-description{font-size:1.25rem;font-weight:500;color:#364751;line-height:1.75;margin-top:24px}.hero .hero-personal{margin-top:18px}
 @media(max-width:680px){.hero .hero-description{font-size:1.125rem;line-height:1.75}}
+
+/* GeoSim technical details are directly visible in the project card. */
+.geo-inline{margin-top:24px;border-top:1px solid #e0e6d9;padding-top:22px}.geo-inline h4{font-size:16px;font-weight:650;color:#354a32}.geo-inline ul{padding-left:18px;margin:12px 0 22px}.geo-inline li,.geo-inline p{font-size:15px;line-height:1.7;color:#53634a}.geo-inline li{margin-bottom:9px}.geo-inline h4+p{margin-top:10px}.geo-inline .geo-note{font-size:12px;line-height:1.7;margin-top:16px;color:#6b795f}.featured .project-actions{justify-content:flex-end}.featured .segmentation-visual{align-self:stretch;position:relative;top:auto}.featured{overflow:clip}
+@media(max-width:680px){.featured .segmentation-visual{position:relative;top:auto}.geo-inline li,.geo-inline p{font-size:16px}}

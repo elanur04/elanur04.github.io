@@ -6,9 +6,17 @@
   document.documentElement.classList.add('js');
   const tr = Object.fromEntries($$('[data-i18n]').map(el => [el.dataset.i18n, el.innerHTML]));
   const en = {
+    geoInlineTitle: "What I contributed",
+    geoResultTitle: "The outcome",
+    geoInlineResult: "A full-stack research prototype for editing buildings and roads together, and exploring baseline, road-closure and new-connection scenarios.",
+    geoInlineNote: "The project is in development. Its traffic model has not been calibrated against real traffic counts. The city artwork in this portfolio is an illustration inspired by the project.",
+    geoWork0: "Built a FastAPI REST service for instance-segmentation-based building detection in satellite imagery.",
+    geoWork1: "Processed detections with 2×2 tiling and IoU-based non-maximum suppression, converting masks into georeferenced GeoJSON polygons.",
+    geoWork2: "Combined OSM buildings and AI detections with a Shapely STRtree spatial index. Retrieved the road network via the Overpass API.",
+    geoWork3: "React and deck.gl interface; traffic scenarios using IDM vehicle following, Dijkstra routing and Web Workers.",
     skip:'Skip to content', navProjects:'Projects', navAbout:'About', navExperience:'Experience', navContact:'Contact', navCV:'View my CV',
     availability:'Open to internships & junior roles', hello:'Hi, I’m', hero1:'Elanur', hero2:'Beycan.', heroRole:'Computer engineering student.<br>Building with AI, data and backend technologies.', heroPersonal:'I learn by asking questions, experimenting and building. I’m looking for a team where I can take responsibility and grow in AI and data-focused backend development.',
-    heroDescription:'I’m a fourth-year student at Bartın University. From processing data in Python to building APIs and deploying to the cloud, I enjoy turning ideas into working products.',
+    heroDescription:'I’m a fourth-year Computer Engineering student at Bartın University. From processing data in Python to building APIs and deploying to the cloud, I enjoy turning ideas into working products.',
     viewProjects:'Explore my work', viewCV:'View my CV', heroDegree:'Expected graduation: July 2027', location:'Istanbul, Türkiye',
     digitalTwin:'DIGITAL TWIN', buildingDetection:'Building detection', fromData:'Data into models', artCaption:'A new way to understand a city.', artNote:'Interactive illustration inspired by GeoSim',
     focus:'MY FOCUS', focus1:'AI & data', focus2:'Backend development', focus3:'Cloud & DevOps', focus4:'Optimization',
