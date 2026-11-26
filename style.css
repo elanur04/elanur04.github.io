@@ -68,3 +68,8 @@ html{scroll-padding-top:88px}.container{width:calc(100% - 40px)}.site-header{hei
 
 /* Vivid midnight palette for the segmentation exhibit. */
 .segmentation-visual{background:#151c36}
+
+/* Personal introduction and a soft daylight city. */
+.hero h1{font-size:clamp(58px,5.6vw,82px);letter-spacing:-4px;line-height:1.06}.hero .accent-word{color:#82969c}.hero .hello{margin-top:25px;margin-bottom:12px;color:#687783}.hero-role{font-family:Manrope,sans-serif;font-size:20px;line-height:1.5;color:#43545e;margin-top:22px;font-weight:500}.hero-description{margin-top:18px;font-size:16px;line-height:1.8;max-width:535px}.hero-personal{margin-top:12px}.hero-footnote{margin-top:25px}.hero-art{background:radial-gradient(ellipse at 45% 40%,#f3f1f8 0,#e9eef4 58%,#e1e9ef 100%);color:#435461;box-shadow:0 14px 40px #637b8d0d}.hero-art:after{border-color:#cad5df88}.art-wordmark{color:#536572}.mini-cross{color:#a59ab9}.art-tag{color:#687b89;border-color:#becbd8}.map-label{background:#fbfcfded;border-color:#fff;color:#51616e;box-shadow:0 7px 25px #647c9412}.label-icon{color:#a69bb8}.map-label div>span{color:#748392}.art-caption{color:#536572}.art-note{color:#738391}.motion-button{border-color:#b3c2cf;color:#647989}.motion-button:hover{background:#d2dce899}
+@media(max-width:900px){.hero h1{font-size:60px}.hero-role{font-size:18px}.hero{gap:30px}.hero-art{min-height:620px}}
+@media(max-width:680px){.hero h1{font-size:64px;letter-spacing:-3px}.hero-role{font-size:19px}.hero-art{min-height:445px}.hero-description{max-width:100%}.hero .hello{margin-top:24px}.hero-footnote{font-size:12px}}

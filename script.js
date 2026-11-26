@@ -7,9 +7,9 @@
   const tr = Object.fromEntries($$('[data-i18n]').map(el => [el.dataset.i18n, el.innerHTML]));
   const en = {
     skip:'Skip to content', navProjects:'Projects', navAbout:'About', navExperience:'Experience', navContact:'Contact', navCV:'View my CV',
-    availability:'Open to internships & junior roles', hello:'Hi, I’m Elanur.', hero1:'Turning data', hero2:'into products', hero3:'that work.',
-    heroDescription:'At the intersection of AI, data and software. I build projects that turn satellite imagery into digital twins and machine learning models into usable applications.',
-    viewProjects:'Explore my work', viewCV:'View my CV', heroDegree:'Computer Engineering · Bartın University', location:'Istanbul, Türkiye',
+    availability:'Open to internships & junior roles', hello:'Hi, I’m', hero1:'Elanur', hero2:'Beycan.', heroRole:'Computer engineering student.<br>Building with AI, data and backend technologies.', heroPersonal:'I learn by asking questions, experimenting and building. I’m looking for a team where I can take responsibility and grow in AI and data-focused backend development.',
+    heroDescription:'I’m a fourth-year student at Bartın University. From processing data in Python to building APIs and deploying to the cloud, I enjoy turning ideas into working products.',
+    viewProjects:'Explore my work', viewCV:'View my CV', heroDegree:'Expected graduation: July 2027', location:'Istanbul, Türkiye',
     digitalTwin:'DIGITAL TWIN', buildingDetection:'Building detection', fromData:'Data into models', artCaption:'A new way to understand a city.', artNote:'Interactive illustration inspired by GeoSim',
     focus:'MY FOCUS', focus1:'AI & data', focus2:'Backend development', focus3:'Cloud & DevOps', focus4:'Optimization',
     projectsEyebrow:'FROM IDEA TO APPLICATION', projectsTitle:'Selected work.', projectsDescription:'Real problems, different technologies.<br>Something learned. Something built.',
@@ -143,41 +143,41 @@
     if(!context||!width)return;
     context.clearRect(0,0,width,height);
     // A quiet coordinate grid extends beyond the raised city tile.
-    for(let n=-240;n<=240;n+=36){line([[n,-240,-10],[n,240,-10]],'#9ab3810d',.6);line([[-240,n,-10],[240,n,-10]],'#9ab3810d',.6);}
-    polygon([[-143,-143,-7],[143,-143,-7],[143,143,-7],[-143,143,-7]],'#11291e','#91ab6033');
-    polygon([[-143,143,0],[143,143,0],[143,143,-12],[-143,143,-12]],'#152e22','#4b6a3944');
-    polygon([[143,-143,0],[143,143,0],[143,143,-12],[143,-143,-12]],'#10251c','#4b6a3944');
-    polygon([[-143,-143,0],[143,-143,0],[143,143,0],[-143,143,0]],'#244332','#6d8e4855');
+    for(let n=-240;n<=240;n+=36){line([[n,-240,-10],[n,240,-10]],'#8f9fb826',.6);line([[-240,n,-10],[240,n,-10]],'#8f9fb826',.6);}
+    polygon([[-143,-143,-7],[143,-143,-7],[143,143,-7],[-143,143,-7]],'#d8deea','#a6b3c466');
+    polygon([[-143,143,0],[143,143,0],[143,143,-12],[-143,143,-12]],'#b8c7d5','#8fa2b777');
+    polygon([[143,-143,0],[143,143,0],[143,143,-12],[143,-143,-12]],'#acbecf','#8fa2b777');
+    polygon([[-143,-143,0],[143,-143,0],[143,143,0],[-143,143,0]],'#e0e6ec','#aebdca');
     // Roads and dashed lane markings.
     for(const n of [-59,49]){
-      polygon([[n-7,-140,1],[n+7,-140,1],[n+7,140,1],[n-7,140,1]],'#173227');
-      polygon([[-140,n-7,1],[140,n-7,1],[140,n+7,1],[-140,n+7,1]],'#173227');
-      for(let k=-132;k<138;k+=16){line([[n,k,1.5],[n,k+5,1.5]],'#819d5966',.8);line([[k,n,1.5],[k+5,n,1.5]],'#819d5966',.8);}
+      polygon([[n-7,-140,1],[n+7,-140,1],[n+7,140,1],[n-7,140,1]],'#bac9d8');
+      polygon([[-140,n-7,1],[140,n-7,1],[140,n+7,1],[-140,n+7,1]],'#bac9d8');
+      for(let k=-132;k<138;k+=16){line([[n,k,1.5],[n,k+5,1.5]],'#f4f7facc',.8);line([[k,n,1.5],[k+5,n,1.5]],'#f4f7facc',.8);}
     }
     // A highlighted route is schematic, not a measured journey.
-    line([[-140,49,2],[-59,49,2],[-59,-59,2],[140,-59,2]],'#bfd98688',1.5);
+    line([[-140,49,2],[-59,49,2],[-59,-59,2],[140,-59,2]],'#a697c8',1.5);
     for(let i=0;i<14;i++){
       const t=((elapsed*.022+i*21)%275)-137;
       const lane=i%2?49:-59;
       const q=project(...(i%3?[t,lane,2]:[lane,t,2]));
-      context.fillStyle=i%4?'#bfd4a6':'#ebf7b7';context.shadowColor='#d9f49d';context.shadowBlur=5;context.beginPath();context.arc(q[0],q[1],i%4?1.4:2,0,Math.PI*2);context.fill();context.shadowBlur=0;
+      context.fillStyle=i%4?'#a997bf':'#f6e0bd';context.shadowColor='#e6d4ef';context.shadowBlur=5;context.beginPath();context.arc(q[0],q[1],i%4?1.4:2,0,Math.PI*2);context.fill();context.shadowBlur=0;
     }
     for(const b of buildings){
       const {x,y,w,d,h,highlight}=b;
-      polygon([[x+5,y+5,1],[x+w+18,y+5,1],[x+w+18,y+d+15,1],[x+5,y+d+15,1]],'#0a201b45');
-      polygon([[x,y+d,0],[x+w,y+d,0],[x+w,y+d,h],[x,y+d,h]],highlight?'#7c9561':'#3b5c43',highlight?'#cce49399':'#7c9a6155',.7);
-      polygon([[x+w,y,0],[x+w,y+d,0],[x+w,y+d,h],[x+w,y,h]],highlight?'#597c48':'#2e4c36',highlight?'#cce49399':'#7c9a6155',.7);
-      polygon([[x,y,h],[x+w,y,h],[x+w,y+d,h],[x,y+d,h]],highlight?'#b5ce85':'#769465',highlight?'#e6f7b2':'#9bb77f88',.8);
-      polygon([[x+4,y+4,h+.3],[x+w-4,y+4,h+.3],[x+w-4,y+d-4,h+.3],[x+4,y+d-4,h+.3]],highlight?'#a3bf6e':'#678459','#cce59b33',.5);
+      polygon([[x+5,y+5,1],[x+w+18,y+5,1],[x+w+18,y+d+15,1],[x+5,y+d+15,1]],'#8796b126');
+      polygon([[x,y+d,0],[x+w,y+d,0],[x+w,y+d,h],[x,y+d,h]],highlight?'#c0b5d3':'#abc3c0',highlight?'#e9dfef':'#d8e6e4',.7);
+      polygon([[x+w,y,0],[x+w,y+d,0],[x+w,y+d,h],[x+w,y,h]],highlight?'#a99dc1':'#90aaa9',highlight?'#e9dfef':'#d8e6e4',.7);
+      polygon([[x,y,h],[x+w,y,h],[x+w,y+d,h],[x,y+d,h]],highlight?'#dfd6ec':'#d5e4df',highlight?'#f4ebfa':'#eef5f2',.8);
+      polygon([[x+4,y+4,h+.3],[x+w-4,y+4,h+.3],[x+w-4,y+d-4,h+.3],[x+4,y+d-4,h+.3]],highlight?'#d2c5e1':'#c4d8d1','#ffffff66',.5);
       for(let floor=7;floor<h-5;floor+=9){
-        for(let win=4;win<w-3;win+=7)line([[x+win,y+d+.3,floor],[x+win+2.3,y+d+.3,floor]],highlight?'#d6e9a9aa':'#adc98566',1.2);
-        for(let win=4;win<d-3;win+=7)line([[x+w+.3,y+win,floor],[x+w+.3,y+win+2.3,floor]],'#adcc8066',1.1);
+        for(let win=4;win<w-3;win+=7)line([[x+win,y+d+.3,floor],[x+win+2.3,y+d+.3,floor]],highlight?'#fff8ef':'#edf5f1bb',1.2);
+        for(let win=4;win<d-3;win+=7)line([[x+w+.3,y+win,floor],[x+w+.3,y+win+2.3,floor]],'#edf5f1aa',1.1);
       }
-      if(highlight){polygon([[x-3,y-3,h+4],[x+w+3,y-3,h+4],[x+w+3,y+d+3,h+4],[x-3,y+d+3,h+4]],null,'#d6ef9177',.8);}
+      if(highlight){polygon([[x-3,y-3,h+4],[x+w+3,y-3,h+4],[x+w+3,y+d+3,h+4],[x-3,y+d+3,h+4]],null,'#a99abd99',.8);}
     }
     // Reference corners make the spatial concept readable without decorative data.
     for(const [x,y] of [[-143,-143],[143,-143],[-143,143],[143,143]]){
-      const q=project(x,y,1);context.strokeStyle='#bdd68b';context.lineWidth=1;context.beginPath();context.moveTo(q[0]-4,q[1]);context.lineTo(q[0]+4,q[1]);context.moveTo(q[0],q[1]-4);context.lineTo(q[0],q[1]+4);context.stroke();
+      const q=project(x,y,1);context.strokeStyle='#9d8cb7';context.lineWidth=1;context.beginPath();context.moveTo(q[0]-4,q[1]);context.lineTo(q[0]+4,q[1]);context.moveTo(q[0],q[1]-4);context.lineTo(q[0],q[1]+4);context.stroke();
     }
   }
   function tick(time){frame=0;if(paused||!visible||document.hidden)return;if(time-lastTime>=30){elapsed+=Math.min(time-lastTime,50);draw();lastTime=time;}frame=requestAnimationFrame(tick);}
